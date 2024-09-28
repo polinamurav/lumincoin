@@ -12,34 +12,20 @@ export class Main {
         const data = {
             labels: [
                 'Red',
-                'Blue',
-                'Yellow'
+                'Orange',
+                'Yellow',
+                'Green',
+                'Blue'
             ],
             datasets: [{
                 label: 'My First Dataset',
-                data: [300, 50, 100],
+                data: [250, 50, 100, 80, 60],
                 backgroundColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(54, 162, 235)',
-                    'rgb(255, 205, 86)'
-                ],
-                hoverOffset: 4
-            }]
-        };
-
-        const data2 = {
-            labels: [
-                'Red',
-                'Blue',
-                'Yellow'
-            ],
-            datasets: [{
-                label: 'My First Dataset',
-                data: [300, 50, 100],
-                backgroundColor: [
-                    'rgb(208,29,29)',
-                    'rgb(54,84,235)',
-                    'rgb(255,241,86)'
+                    '#DC3545',
+                    '#FD7E14',
+                    '#FFC107',
+                    '#20C997',
+                    '#0D6EFD',
                 ],
                 hoverOffset: 4
             }]
@@ -60,7 +46,7 @@ export class Main {
 
         new Chart(ctx2, {
             type: 'pie',
-            data: data2,
+            data: data,
             options: {
                 responsive: true, //адаптивность графика
                 plugins: {
