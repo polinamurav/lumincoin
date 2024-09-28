@@ -1,27 +1,63 @@
 <div class="main">
-    <h3 class="mb-5">Главная</h3>
-    <div class="pb-5 d-flex align-items-center flex-wrap">
-        <button type="button" class="btn btn-secondary me-3 mb-2" style="width: 100px;">Сегодня</button>
-        <button type="button" class="btn border-secondary me-3 mb-2" style="width: 100px;">Неделя</button>
-        <button type="button" class="btn border-secondary me-3 mb-2" style="width: 100px;">Месяц</button>
-        <button type="button" class="btn border-secondary me-3 mb-2" style="width: 100px;">Год</button>
-        <button type="button" class="btn border-secondary me-3 mb-2" style="width: 100px;">Все</button>
-        <button type="button" class="btn border-secondary me-3 mb-2" style="width: 100px;">Интервал</button>
-        <div>с
-            <input type="date" class="input-date border-0 text-decoration-underline" placeholder="Дата">
-            по
-            <input type="date" class="input-date border-0 text-decoration-underline ml-2" placeholder="Дата">
+    <div class="container-fluid ps-0 pe-0">
+        <h3 class="mb-5">Главная</h3>
+        <div class="row g-3 pb-5">
+            <div class="col-12 col-xl-2 col-lg-4 col-sm-6">
+                <button type="button" class="btn btn-secondary w-100">Сегодня</button>
+            </div>
+            <div class="col-12 col-xl-2 col-lg-4 col-sm-6">
+                <button type="button" class="btn border-secondary w-100">Неделя</button>
+            </div>
+            <div class="col-12 col-xl-2 col-lg-4 col-sm-6">
+                <button type="button" class="btn border-secondary w-100">Месяц</button>
+            </div>
+            <div class="col-12 col-xl-2 col-lg-4 col-sm-6">
+                <button type="button" class="btn border-secondary w-100">Год</button>
+            </div>
+            <div class="col-12 col-xl-2 col-lg-4 col-sm-6">
+                <button type="button" class="btn border-secondary w-100">Все</button>
+            </div>
+            <div class="col-12 col-xl-2 col-lg-4 col-sm-6">
+                <button type="button" class="btn border-secondary w-100">Интервал</button>
+            </div>
+            <div class="col-12 col-xl-2 col-lg-4 col-sm-6">
+                <div class="d-flex align-items-center">с
+                    <input type="date" class="input-date border-0 text-decoration-underline ms-2 me-2"
+                           placeholder="Дата">
+                    по
+                    <input type="date" class="input-date border-0 text-decoration-underline ms-2 ml-2"
+                           placeholder="Дата">
+                </div>
+            </div>
         </div>
     </div>
-    <div class="pt-5 pb-5 d-flex justify-content-between">
-        <div class="income">
+<!--    <div class="pt-5 pb-5 d-flex justify-content-between">-->
+<!--        <div class="income">-->
+<!--            <h3 class="text-center mb-3">Доходы</h3>-->
+<!--            <div>-->
+<!--                &lt;!&ndash;                <canvas id="myChart" width="400" height="400"></canvas>&ndash;&gt;-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="border-start mx-3" style="height: inherit;"></div>-->
+<!--        <div class="expenses">-->
+<!--            <h3 class="text-center mb-3">Расходы</h3>-->
+<!--            <div>-->
+<!--                &lt;!&ndash;                <canvas id="diagram2" width="400" height="400"></canvas>&ndash;&gt;-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+    <div class="row g-3 pb-5 pt-5 d-flex justify-content-center align-items-center">
+        <div class="col-12 col-xl-5 col-sm-6 border-end">
             <h3 class="text-center mb-3">Доходы</h3>
-            <img src="./images/diagram.png" alt="Диаграмма" class="border-">
+            <div>
+                <canvas id="myChart"></canvas>
+            </div>
         </div>
-        <div class="border-start mx-3" style="height: inherit;"></div>
-        <div class="expenses">
+        <div class="col-12 col-xl-5 col-sm-6">
             <h3 class="text-center mb-3">Расходы</h3>
-            <img src="./images/diagram.png" alt="Диаграмма" class="border-">
+            <div>
+                <canvas id="diagram2"></canvas>
+            </div>
         </div>
     </div>
 </div>

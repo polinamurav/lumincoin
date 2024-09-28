@@ -48,6 +48,7 @@ module.exports = {
                     {from: "./node_modules/bootstrap-icons/font/fonts", to: "css/fonts"},
                     {from: "./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js", to: "js"},
                     {from: "./node_modules/jquery/dist/jquery.min.js", to: "js"},
+                    {from: "./node_modules/chart.js/dist/chart.js", to: "js"},
                 ]
             }
         ),
