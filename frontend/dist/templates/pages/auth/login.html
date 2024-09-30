@@ -1,11 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login</title>
-</head>
-<body>
-
-</body>
-</html>
+<div class="login d-flex align-items-center justify-content-center vh-100">
+    <form class="auth d-flex flex-column align-items-center justify-content-center w-100">
+        <a href="javascript:void(0);" class="d-flex align-items-center mb-3 mb-md-0 justify-content-center">
+            <img src="/images/logo.png" alt="Lumincoin Freelance Logo" style="height: 70px"
+                 class="text-center">
+        </a>
+        <h2 class="mt-5 mb-3">Вход</h2>
+        <div class="col-md-4 w-100 mb-2">
+            <div class="input-group">
+                <span class="input-group-text" id="emailGroup"><i class="bi bi-envelope-open"></i></span>
+                <input type="email" class="form-control" aria-describedby="emailGroup validationEmailFeedback" required
+                       placeholder="Электронная почта">
+                <div id="validationEmailFeedback" class="invalid-feedback">
+                    Пожалуйста, выберите электронную почту.
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 w-100 mb-2">
+            <div class="input-group">
+                <span class="input-group-text" id="passwordGroup"><i class="bi bi-lock"></i></span>
+                <input type="email" class="form-control" aria-describedby="passwordGroup validationPasswordFeedback" required placeholder="Пароль">
+                <div id="validationPasswordFeedback" class="invalid-feedback">
+                    Пожалуйста, выберите пароль.
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 w-100 mb-3">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="rememberMe" required>
+                <label class="form-check-label" for="rememberMe">
+                    Запомнить меня
+                </label>
+            </div>
+        </div>
+        <div class="col-md-4 col-12 w-100 mb-2">
+            <button class="btn btn-primary w-100" type="submit">Войти</button>
+        </div>
+        <div class="col-md-4 col-12 w-100">
+            Еще нет аккаунта? <a href="/sign-up" class="text-primary">Пройдите регистрацию</a>
+        </div>
+    </form>
+</div>

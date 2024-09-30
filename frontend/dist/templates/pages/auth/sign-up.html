@@ -1,12 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SignUp</title>
-</head>
-<body>
-
-
-</body>
-</html>
+<div class="login d-flex align-items-center justify-content-center vh-100">
+    <form class="auth d-flex flex-column align-items-center justify-content-center w-100">
+        <a href="javascript:void(0);" class="d-flex align-items-center mb-3 mb-md-0 justify-content-center">
+            <img src="/images/logo.png" alt="Lumincoin Freelance Logo" style="height: 70px"
+                 class="text-center">
+        </a>
+        <h2 class="mt-5 mb-3">Создайте аккаунт</h2>
+        <div class="col-md-4 w-100 mb-2">
+            <div class="input-group">
+                <span class="input-group-text" id="nameGroup"><i class="bi bi-person"></i></span>
+                <input type="email" class="form-control" aria-describedby="nameGroup validationNameFeedback" required
+                       placeholder="ФИО">
+                <div id="validationNameFeedback" class="invalid-feedback">
+                    Пожалуйста, введите ФИО.
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 w-100 mb-2">
+            <div class="input-group">
+                <span class="input-group-text" id="emailGroup"><i class="bi bi-envelope-open"></i></span>
+                <input type="email" class="form-control" aria-describedby="emailGroup validationEmailFeedback" required
+                       placeholder="Электронная почта">
+                <div id="validationEmailFeedback" class="invalid-feedback">
+                    Пожалуйста, выберите электронную почту.
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 w-100 mb-2">
+            <div class="input-group">
+                <span class="input-group-text" id="passwordGroup"><i class="bi bi-lock"></i></span>
+                <input type="email" class="form-control" aria-describedby="passwordGroup validationPasswordFeedback" required placeholder="Пароль">
+                <div id="validationPasswordFeedback" class="invalid-feedback">
+                    Пожалуйста, выберите пароль.
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 w-100">
+            <div class="input-group">
+                <span class="input-group-text" id="passwordRepeatGroup"><i class="bi bi-lock"></i></span>
+                <input type="email" class="form-control" aria-describedby="passwordRepeatGroup validationPasswordRepeatFeedback" required placeholder="Подтверждение пароля">
+                <div id="validationPasswordRepeatFeedback" class="invalid-feedback">
+                    Пожалуйста, подтвердите пароль.
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-12 w-100 mb-2 mt-3">
+            <button class="btn btn-primary w-100" type="submit">Войти</button>
+        </div>
+        <div class="col-md-4 col-12 w-100">
+            Уже есть аккаунт? <a href="/sign-up" class="text-primary">Войдите в систему</a>
+        </div>
+    </form>
+</div>
