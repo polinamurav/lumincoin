@@ -1,5 +1,6 @@
 import {Main} from "./components/main.js";
 import {IncomeExpensesEdit} from "./components/income & expenses/income&Expenses-edit.js";
+import {Form} from "./components/auth/form.js";
 
 export class Router {
     constructor() {
@@ -30,7 +31,7 @@ export class Router {
                 filePathTemplate: '/templates/pages/auth/login.html',
                 useLayout: false,
                 load: () => {
-                    // new Login();
+                    new Form('login');
                 },
                 unload: () => {
                     document.body.classList.remove('d-flex', 'vh-100');
@@ -42,7 +43,7 @@ export class Router {
                 filePathTemplate: '/templates/pages/auth/sign-up.html',
                 useLayout: false,
                 load: () => {
-                    // new SignUp();
+                    new Form('signup');
                 },
                 unload: () => {
                     document.body.classList.remove('d-flex', 'vh-100');

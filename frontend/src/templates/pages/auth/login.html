@@ -8,19 +8,19 @@
         <div class="col-md-4 w-100 mb-2">
             <div class="input-group">
                 <span class="input-group-text" id="emailGroup"><i class="bi bi-envelope-open"></i></span>
-                <input type="email" class="form-control" aria-describedby="emailGroup validationEmailFeedback" required
+                <input type="email" id="email" class="form-control" aria-describedby="emailGroup validationEmailFeedback" required
                        placeholder="Электронная почта">
                 <div id="validationEmailFeedback" class="invalid-feedback">
-                    Пожалуйста, выберите электронную почту.
+                    Пожалуйста, введите электронную почту.
                 </div>
             </div>
         </div>
         <div class="col-md-4 w-100 mb-2">
             <div class="input-group">
                 <span class="input-group-text" id="passwordGroup"><i class="bi bi-lock"></i></span>
-                <input type="email" class="form-control" aria-describedby="passwordGroup validationPasswordFeedback" required placeholder="Пароль">
+                <input type="password" id="password" class="form-control" aria-describedby="passwordGroup validationPasswordFeedback" required placeholder="Пароль">
                 <div id="validationPasswordFeedback" class="invalid-feedback">
-                    Пожалуйста, выберите пароль.
+                    Пожалуйста, введите корректный пароль.
                 </div>
             </div>
         </div>
@@ -33,7 +33,7 @@
             </div>
         </div>
         <div class="col-md-4 col-12 w-100 mb-2">
-            <button class="btn btn-primary w-100" type="submit">Войти</button>
+            <button class="btn btn-primary w-100" id="process" type="submit">Войти</button>
         </div>
         <div class="col-md-4 col-12 w-100">
             Еще нет аккаунта? <a href="#/sign-up" class="text-primary">Пройдите регистрацию</a>
