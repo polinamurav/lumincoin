@@ -1,32 +1,31 @@
-import {Main} from "./components/main";
-import {IncomeExpensesEdit} from "./components/income & expenses/income&Expenses-edit";
+import {Main} from "./components/main.js";
+import {IncomeExpensesEdit} from "./components/income & expenses/income&Expenses-edit.js";
 
 export class Router {
     constructor() {
         this.titlePageElement = document.getElementById('title');
         this.contentPageElement = document.getElementById('content');
-        this.adminLteStyleElement = document.getElementById('adminlte_style');
 
         this.initEvents();
 
         this.routes = [
             {
-                route: '/',
+                route: '#/',
                 title: 'Главная',
-                filePathTemplate: '/templates/pages/main.html',
-                useLayout: '/templates/layout.html',
+                filePathTemplate: 'templates/pages/main.html',
+                useLayout: 'templates/layout.html',
                 load: () => {
                     new Main();
                 },
             },
             {
-                route: '/404',
+                route: '#/404',
                 title: 'Страница не найдена',
                 filePathTemplate: '/templates/pages/404.html',
                 useLayout: false,
             },
             {
-                route: '/login',
+                route: '#/login',
                 title: 'Авторизация',
                 filePathTemplate: '/templates/pages/auth/login.html',
                 useLayout: false,
@@ -38,7 +37,7 @@ export class Router {
                 },
             },
             {
-                route: '/sign-up',
+                route: '#/sign-up',
                 title: 'Регистрация',
                 filePathTemplate: '/templates/pages/auth/sign-up.html',
                 useLayout: false,
@@ -50,13 +49,13 @@ export class Router {
                 },
             },
             {
-                route: '/logout',
+                route: '#/logout',
                 load: () => {
                     // new Logout();
                 },
             },
             {
-                route: '/income',
+                route: '#/income',
                 title: 'Доходы',
                 filePathTemplate: '/templates/pages/category/income/list.html',
                 useLayout: '/templates/layout.html',
@@ -65,7 +64,7 @@ export class Router {
                 },
             },
             {
-                route: '/income/create',
+                route: '#/income/create',
                 title: 'Доходы',
                 filePathTemplate: '/templates/pages/category/income/create.html',
                 useLayout: '/templates/layout.html',
@@ -74,7 +73,7 @@ export class Router {
                 },
             },
             {
-                route: '/income/edit',
+                route: '#/income/edit',
                 title: 'Доходы',
                 filePathTemplate: '/templates/pages/category/income/edit.html',
                 useLayout: '/templates/layout.html',
@@ -83,13 +82,13 @@ export class Router {
                 },
             },
             {
-                route: '/income/delete',
+                route: '#/income/delete',
                 load: () => {
                     // new SignUp();
                 },
             },
             {
-                route: '/expenses',
+                route: '#/expenses',
                 title: 'Расходы',
                 filePathTemplate: '/templates/pages/category/expenses/list.html',
                 useLayout: '/templates/layout.html',
@@ -98,7 +97,7 @@ export class Router {
                 },
             },
             {
-                route: '/expenses/create',
+                route: '#/expenses/create',
                 title: 'Расходы',
                 filePathTemplate: '/templates/pages/category/expenses/create.html',
                 useLayout: '/templates/layout.html',
@@ -107,7 +106,7 @@ export class Router {
                 },
             },
             {
-                route: '/expenses/edit',
+                route: '#/expenses/edit',
                 title: 'Расходы',
                 filePathTemplate: '/templates/pages/category/expenses/edit.html',
                 useLayout: '/templates/layout.html',
@@ -116,13 +115,13 @@ export class Router {
                 },
             },
             {
-                route: '/expenses/delete',
+                route: '#/expenses/delete',
                 load: () => {
                     // new SignUp();
                 },
             },
             {
-                route: '/income&expenses',
+                route: '#/income&expenses',
                 title: 'Доходы и расходы',
                 filePathTemplate: '/templates/pages/income & expenses/list.html',
                 useLayout: '/templates/layout.html',
@@ -131,7 +130,7 @@ export class Router {
                 },
             },
             {
-                route: '/income&expenses/create',
+                route: '#/income&expenses/create',
                 title: 'Доходы и расходы',
                 filePathTemplate: '/templates/pages/income & expenses/create.html',
                 useLayout: '/templates/layout.html',
@@ -140,7 +139,7 @@ export class Router {
                 },
             },
             {
-                route: '/income&expenses/edit',
+                route: '#/income&expenses/edit',
                 title: 'Доходы и расходы',
                 filePathTemplate: '/templates/pages/income & expenses/edit.html',
                 useLayout: '/templates/layout.html',
@@ -149,7 +148,7 @@ export class Router {
                 },
             },
             {
-                route: '/income&expenses/delete',
+                route: '#/income&expenses/delete',
                 load: () => {
                     // new SignUp();
                 },
@@ -163,26 +162,17 @@ export class Router {
     }
 
     async activateRoute() {
-        const urlRoute = window.location.pathname;
+        const urlRoute = window.location.hash.split('?')[0];
         const newRoute = this.routes.find(item => item.route === urlRoute);
 
-        if (newRoute) {
-            // if (newRoute.styles && newRoute.styles.length > 0) {
-            //     newRoute.styles.forEach(style => {
-            //         const link = document.createElement('link');
-            //         link.rel = 'stylesheet';
-            //         link.href = '/css/' + style;
-            //         document.head.insertBefore(link, this.adminLteStyleElement);
-            //     });
-            // }
+        if (urlRoute === '#/logout') {
+            //TODO
+        }
 
+        if (newRoute) {
             if (newRoute.title) {
                 this.titlePageElement.innerText = newRoute.title;
             }
-
-            // if (newRoute.unload && typeof newRoute.unload === 'function') {
-            //     newRoute.unload();
-            // }
 
             if (newRoute.filePathTemplate) {
                 document.body.className = '';
@@ -203,9 +193,7 @@ export class Router {
                 newRoute.load();
             }
         } else {
-            console.log('No route found');
-            history.pushState({},'', '/404');
-            await this.activateRoute();
+            window.location.href = '#/';
         }
     }
 }

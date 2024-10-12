@@ -1,5 +1,5 @@
 import './styles/styles.css';
-import {Router} from "./router";
+import {Router} from "./router.js";
 
 class App {
     constructor() {
