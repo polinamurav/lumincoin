@@ -1,6 +1,7 @@
 import {Main} from "./components/main.js";
 import {IncomeExpensesEdit} from "./components/income & expenses/income&Expenses-edit.js";
 import {Form} from "./components/auth/form.js";
+import {Auth} from "./components/services/auth";
 
 export class Router {
     constructor() {
@@ -167,10 +168,17 @@ export class Router {
         const newRoute = this.routes.find(item => item.route === urlRoute);
 
         if (urlRoute === '#/logout') {
-            //TODO
+            await Auth.logout();
+            location.href = '#/login';
+            return false;
         }
 
         if (newRoute) {
+            // if (!Auth.getAuthInfo(Auth.accessTokenKey)) {
+            //     location.href = '#/login';
+            //     return false;
+            // }
+
             if (newRoute.title) {
                 this.titlePageElement.innerText = newRoute.title;
             }
@@ -181,11 +189,6 @@ export class Router {
                 if (newRoute.useLayout) {
                     this.contentPageElement.innerHTML = await fetch(newRoute.useLayout).then(response => response.text());
                     contentBlock = document.getElementById('content-layout');
-                    // document.body.classList.add('sidebar-mini');
-                    // document.body.classList.add('layout-fixed');
-                } else {
-                    // document.body.classList.remove('sidebar-mini');
-                    // document.body.classList.remove('layout-fixed');
                 }
                 contentBlock.innerHTML = await fetch(newRoute.filePathTemplate).then(response => response.text());
             }

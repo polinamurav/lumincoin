@@ -1,6 +1,15 @@
+import config from "../../config/config";
+import {Auth} from "../services/auth";
+import {CustomHttp} from "../services/custom-http";
+
 export class Form {
     constructor(page) {
         this.page = page;
+
+        //если пользователь уже зарегистрирован
+        if (Auth.getAuthInfo(Auth.accessTokenKey)) {
+            return location.href = '#/';
+        }
 
         this.fields = [
             {
@@ -21,12 +30,20 @@ export class Form {
 
         if (this.page === 'signup') {
             this.fields.unshift({
-                name: 'name',
-                id: 'name',
-                element: null,
-                regex: /^[А-Я][а-я]+\s*$/,
-                valid: false,
-            })
+                    name: 'name',
+                    id: 'name',
+                    element: null,
+                    regex: /^[А-Я][а-я]+\s*$/,
+                    valid: false,
+                },
+                {
+                    name: 'lastName',
+                    id: 'lastName',
+                    element: null,
+                    regex: /^[А-Я][а-я]+\s*$/,
+                    valid: false,
+                }
+            )
             this.fields.push({
                 name: 'passwordRepeat',
                 id: 'password-repeat',
@@ -43,10 +60,10 @@ export class Form {
             item.element.onchange = function () {
                 that.validateField.call(that, item, this);
             }
-        })
+        });
 
         this.processElement = document.getElementById('process');
-        this.processElement.onchange = function () {
+        this.processElement.onclick = function () {
             that.processForm();
         }
     }
@@ -84,9 +101,54 @@ export class Form {
         return validForm;
     }
 
-    processForm() {
+    async processForm() {
         if (this.validateForm()) {
+            const email = this.fields.find(item => item.name === 'email').element.value;
+            const password = this.fields.find(item => item.name === 'password').element.value;
 
+            if (this.page === 'signup') {
+                try {
+                    const result = await CustomHttp.request(config.api + '/signup', 'POST', {
+                        name: this.fields.find(item => item.name === 'name').element.value,
+                        lastName: this.fields.find(item => item.name === 'lastName').element.value,
+                        email: email,
+                        password: password,
+                        passwordRepeat: this.fields.find(item => item.name === 'passwordRepeat').element.value,
+                    });
+
+                    if (result) {
+                        if (result.error || !result.user) {
+                            throw new Error(result.message);
+                        }
+                        localStorage.setItem('userEmail', email);
+                    }
+                } catch (error) {
+                    return console.log(error);
+                }
+            }
+
+            try {
+                const result = await CustomHttp.request(config.api + '/login', 'POST', {
+                    email: email,
+                    password: password,
+                });
+
+                if (result) {
+                    if (result.error || !result.tokens.accessToken || !result.tokens.refreshToken || !result.user.name || !result.user.lastName || !result.user.id) {
+                        throw new Error(result.message);
+                    }
+
+                    Auth.setTokens(result.tokens.accessToken, result.tokens.refreshToken);
+                    Auth.setUserInfo({
+                        fullName: result.user.name + ' ' +  result.user.lastName,
+                        userId: result.user.id,
+                        email: result.email
+                    })
+                    location.href = '#/';
+                }
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 }
