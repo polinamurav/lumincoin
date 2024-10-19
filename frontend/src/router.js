@@ -178,6 +178,13 @@ export class Router {
             //     location.href = '#/login';
             //     return false;
             // }
+            if (urlRoute !== '#/login' && urlRoute !== '#/sign-up') {
+                const accessTokenKey = localStorage.getItem(Auth.accessTokenKey);
+                if (!accessTokenKey) {
+                    window.location.href = '#/login';
+                    return;
+                }
+            }
 
             if (newRoute.title) {
                 this.titlePageElement.innerText = newRoute.title;
@@ -197,7 +204,7 @@ export class Router {
                 newRoute.load();
             }
         } else {
-            window.location.href = '#/';
+            window.location.href = '#/login';
         }
     }
 }
