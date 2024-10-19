@@ -2,6 +2,8 @@ import {Main} from "./components/main.js";
 import {IncomeExpensesEdit} from "./components/income & expenses/income&Expenses-edit.js";
 import {Form} from "./components/auth/form.js";
 import {Auth} from "./components/services/auth";
+import {CustomHttp, CustomHttp as HttpUtils} from "./components/services/custom-http";
+import config from "./config/config";
 
 export class Router {
     constructor() {
@@ -174,10 +176,6 @@ export class Router {
         }
 
         if (newRoute) {
-            // if (!Auth.getAuthInfo(Auth.accessTokenKey)) {
-            //     location.href = '#/login';
-            //     return false;
-            // }
             if (urlRoute !== '#/login' && urlRoute !== '#/sign-up') {
                 const accessTokenKey = localStorage.getItem(Auth.accessTokenKey);
                 if (!accessTokenKey) {
@@ -198,6 +196,23 @@ export class Router {
                     contentBlock = document.getElementById('content-layout');
                 }
                 contentBlock.innerHTML = await fetch(newRoute.filePathTemplate).then(response => response.text());
+
+                this.profileNameElement = document.getElementById('user-name');
+                if (!this.userName) {
+                    let userInfo = Auth.getAuthInfo(Auth.userInfoKey);
+                    if (userInfo) {
+                        userInfo = JSON.parse(userInfo);
+                        if (userInfo.fullName) {
+                            this.userName = userInfo.fullName;
+                        }
+                    }
+                }
+                if (this.profileNameElement) {
+                    this.profileNameElement.innerText = this.userName;
+                }
+                this.activateMenuItem(newRoute);
+
+                // await this.getBalance();
             }
 
             if (newRoute.load && typeof newRoute.load === 'function') {
@@ -206,5 +221,49 @@ export class Router {
         } else {
             window.location.href = '#/login';
         }
+    }
+
+    async getBalance() {
+        const result = await CustomHttp.request(config.api + '/balance');
+
+        // if (result.status === 401) {
+        //     window.location.href = '#/login';
+        //     return;
+        // }
+
+        if (result.error || !result.response) {
+            alert('Ошибка при запросе баланса. Обратитесь в поддержку');
+            return;
+        }
+
+        document.getElementById('balance').innerText = result.balance || 0;
+    }
+
+    activateMenuItem(route) {
+        let openedDropdown = null;
+
+        document.querySelectorAll('.nav-link').forEach(item => {
+            const href = item.getAttribute('href');
+            if ((route.route.startsWith(href) && href !== '#/') || (route.route === '#/' && href === '#/')) {
+                item.classList.add('active');
+                item.classList.remove('link-dark');
+                if (href === '#/income' || href === '#/expenses') {
+                    const dropdownMenu = item.closest('.dropdown').querySelector('.dropdown-menu');
+                    if (dropdownMenu) {
+                        dropdownMenu.classList.add('show');
+                        openedDropdown = dropdownMenu;
+                    }
+                }
+            } else {
+                item.classList.remove('active');
+                item.classList.add('link-dark');
+                if (href === '#/income' || href === '#/expenses') {
+                    const dropdownMenu = item.closest('.dropdown').querySelector('.dropdown-menu');
+                    if (dropdownMenu && openedDropdown !== dropdownMenu) {
+                        dropdownMenu.classList.remove('show');
+                    }
+                }
+            }
+        });
     }
 }
