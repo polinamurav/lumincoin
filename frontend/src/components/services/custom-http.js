@@ -11,8 +11,9 @@ export class CustomHttp {
         };
 
         let token = localStorage.getItem(Auth.accessTokenKey);
+        // let token = Auth.getAuthInfo(Auth.accessTokenKey);
         if (token) {
-            params.headers['x-access-token'] = token;
+            params.headers['x-auth-token'] = token;
         }
 
         if (body) {
@@ -23,11 +24,18 @@ export class CustomHttp {
 
         if (response.status < 200 || response.status >= 300) {
             if (response.status === 401) {
-                const result = await Auth.processUnauthorizedResponse();
-                if (result) {
-                    return await this.request(url, method, body);
+                if (!token) {
+                    //     1 - токена нет
+                    window.location.href = '#/login';
                 } else {
-                    return null;
+                    //     2 - токен устарел (надо обновить)
+                    const updateTokenResult = await Auth.updateRefreshToken();
+                    if (updateTokenResult) {
+                        //запрос повторно
+                        return await this.request(url, method, body);
+                    } else {
+                        window.location.href = '#/login';
+                    }
                 }
             }
 

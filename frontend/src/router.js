@@ -4,6 +4,7 @@ import {Form} from "./components/auth/form.js";
 import {Auth} from "./components/services/auth";
 import {CustomHttp, CustomHttp as HttpUtils} from "./components/services/custom-http";
 import config from "./config/config";
+import {IncomeExpensesList} from "./components/income & expenses/income&Expenses-list";
 
 export class Router {
     constructor() {
@@ -130,7 +131,7 @@ export class Router {
                 filePathTemplate: '/templates/pages/income & expenses/list.html',
                 useLayout: '/templates/layout.html',
                 load: () => {
-                    // new SignUp();
+                    new IncomeExpensesList();
                 },
             },
             {
