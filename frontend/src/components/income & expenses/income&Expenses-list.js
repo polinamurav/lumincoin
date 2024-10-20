@@ -9,12 +9,12 @@ export class IncomeExpensesList {
     async getIncomeExpenses() {
         const response = await IncomeExpensesService.getIncomeExpenses();
 
-        if (response.error) {
-            alert(response.error);
+        if (response) {
+            alert(response);
             return response.redirect ? window.location.href = '#/' : null;
         }
 
-        this.showRecords(response.incomeExpenses);
+        this.showRecords(response);
     }
 
     showRecords(incomeExpenses) {
@@ -36,6 +36,4 @@ export class IncomeExpensesList {
         }
 
     }
-
-
 }
