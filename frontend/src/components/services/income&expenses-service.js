@@ -38,4 +38,18 @@ export class IncomeExpensesService {
             return error;
         }
     }
+
+    static async createIncomeExpenses(data) {
+        try {
+            const result = await HttpUtils.request(config.api + '/operations', 'POST', data);
+
+            // if (!result || !result.length) {
+            //     throw new Error('Данные операций отсутствуют или некорректны.');
+            // }
+
+            return result;
+        } catch (error) {
+            return error;
+        }
+    }
 }

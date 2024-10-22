@@ -5,6 +5,7 @@ import {Auth} from "./components/services/auth";
 import {CustomHttp, CustomHttp as HttpUtils} from "./components/services/custom-http";
 import config from "./config/config";
 import {IncomeExpensesList} from "./components/income & expenses/income&Expenses-list";
+import {IncomeExpensesCreate} from "./components/income & expenses/income&Expenses-create";
 
 export class Router {
     constructor() {
@@ -139,8 +140,11 @@ export class Router {
                 title: 'Доходы и расходы',
                 filePathTemplate: '/templates/pages/income & expenses/create.html',
                 useLayout: '/templates/layout.html',
+                // load: () => {
+                //     new IncomeExpensesCreate();
+                // },
                 load: () => {
-                    // new SignUp();
+                    new IncomeExpensesCreate();
                 },
             },
             {
