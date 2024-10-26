@@ -9,6 +9,7 @@ import {IncomeExpensesCreate} from "./components/income & expenses/income&Expens
 import {IncomeList} from "./components/category/income/income-list";
 import {IncomeCreate} from "./components/category/income/income-create";
 import {IncomeDelete} from "./components/category/income/income-delete";
+import {IncomeEdit} from "./components/category/income/income-edit";
 
 export class Router {
     constructor() {
@@ -87,7 +88,7 @@ export class Router {
                 filePathTemplate: '/templates/pages/category/income/edit.html',
                 useLayout: '/templates/layout.html',
                 load: () => {
-                    // new SignUp();
+                   new IncomeEdit();
                 },
             },
             {
