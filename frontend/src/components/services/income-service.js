@@ -15,4 +15,18 @@ export class IncomeService {
             return error;
         }
     }
+
+    static async createIncome(data) {
+        try {
+            const result = await HttpUtils.request(config.api + '/categories/income', 'POST', data);
+
+            // if (!result || !result.length) {
+            //     throw new Error('Данные операций отсутствуют или некорректны.');
+            // }
+
+            return result;
+        } catch (error) {
+            return error;
+        }
+    }
 }
