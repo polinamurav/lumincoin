@@ -10,6 +10,7 @@ import {IncomeList} from "./components/category/income/income-list";
 import {IncomeCreate} from "./components/category/income/income-create";
 import {IncomeDelete} from "./components/category/income/income-delete";
 import {IncomeEdit} from "./components/category/income/income-edit";
+import {ExpenseList} from "./components/category/expense/expense-list";
 
 export class Router {
     constructor() {
@@ -98,16 +99,16 @@ export class Router {
                 },
             },
             {
-                route: '#/expenses',
+                route: '#/expense',
                 title: 'Расходы',
                 filePathTemplate: '/templates/pages/category/expenses/list.html',
                 useLayout: '/templates/layout.html',
                 load: () => {
-                    // new SignUp();
+                    new ExpenseList();
                 },
             },
             {
-                route: '#/expenses/create',
+                route: '#/expense/create',
                 title: 'Расходы',
                 filePathTemplate: '/templates/pages/category/expenses/create.html',
                 useLayout: '/templates/layout.html',
@@ -116,7 +117,7 @@ export class Router {
                 },
             },
             {
-                route: '#/expenses/edit',
+                route: '#/expense/edit',
                 title: 'Расходы',
                 filePathTemplate: '/templates/pages/category/expenses/edit.html',
                 useLayout: '/templates/layout.html',
@@ -125,7 +126,7 @@ export class Router {
                 },
             },
             {
-                route: '#/expenses/delete',
+                route: '#/expense/delete',
                 load: () => {
                     // new SignUp();
                 },
@@ -256,7 +257,7 @@ export class Router {
             if ((route.route.startsWith(href) && href !== '#/') || (route.route === '#/' && href === '#/')) {
                 item.classList.add('active');
                 item.classList.remove('link-dark');
-                if (href === '#/income' || href === '#/expenses') {
+                if (href === '#/income' || href === '#/expense') {
                     const dropdownMenu = item.closest('.dropdown').querySelector('.dropdown-menu');
                     if (dropdownMenu) {
                         dropdownMenu.classList.add('show');
@@ -266,7 +267,7 @@ export class Router {
             } else {
                 item.classList.remove('active');
                 item.classList.add('link-dark');
-                if (href === '#/income' || href === '#/expenses') {
+                if (href === '#/income' || href === '#/expense') {
                     const dropdownMenu = item.closest('.dropdown').querySelector('.dropdown-menu');
                     if (dropdownMenu && openedDropdown !== dropdownMenu) {
                         dropdownMenu.classList.remove('show');
