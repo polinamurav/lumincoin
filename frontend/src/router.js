@@ -6,6 +6,8 @@ import {CustomHttp, CustomHttp as HttpUtils} from "./components/services/custom-
 import config from "./config/config";
 import {IncomeExpensesList} from "./components/income & expenses/income&Expenses-list";
 import {IncomeExpensesCreate} from "./components/income & expenses/income&Expenses-create";
+import {IncomeList} from "./components/category/income/income-list";
+import {IncomeCreate} from "./components/category/income/income-create";
 
 export class Router {
     constructor() {
@@ -66,7 +68,7 @@ export class Router {
                 filePathTemplate: '/templates/pages/category/income/list.html',
                 useLayout: '/templates/layout.html',
                 load: () => {
-                    // new SignUp();
+                    new IncomeList();
                 },
             },
             {
@@ -75,7 +77,7 @@ export class Router {
                 filePathTemplate: '/templates/pages/category/income/create.html',
                 useLayout: '/templates/layout.html',
                 load: () => {
-                    // new SignUp();
+                    new IncomeCreate();
                 },
             },
             {
