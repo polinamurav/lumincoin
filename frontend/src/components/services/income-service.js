@@ -21,7 +21,7 @@ export class IncomeService {
         try {
             const result = await HttpUtils.request(config.api + '/categories/income/' + id);
 
-            if (!result || !result.length || result.error) {
+            if (!result) {
                 alert ('Данные операций отсутствуют или некорректны.');
                 window.location.href = '/#';
             }
@@ -36,7 +36,7 @@ export class IncomeService {
         try {
             const result = await HttpUtils.request(config.api + '/categories/income', 'POST', data);
 
-            if (!result || !result.length || result.error) {
+            if (!result) {
                 alert ('Данные операций отсутствуют или некорректны.');
                 window.location.href = '/#';
             }
@@ -51,7 +51,7 @@ export class IncomeService {
         try {
             const result = await HttpUtils.request(config.api + '/categories/income/' + id, 'DELETE');
 
-            if (!result || !result.length || result.error) {
+            if (!result) {
                 alert ('Данные операций отсутствуют или некорректны.');
                 window.location.href = '/#';
             }
@@ -66,7 +66,7 @@ export class IncomeService {
         try {
             const result = await HttpUtils.request(config.api + '/categories/income/' + id, 'PUT', data);
 
-            if (!result || !result.length || result.error) {
+            if (!result) {
                 alert ('Данные операций отсутствуют или некорректны.');
                 window.location.href = '/#';
             }

@@ -11,6 +11,9 @@ import {IncomeCreate} from "./components/category/income/income-create";
 import {IncomeDelete} from "./components/category/income/income-delete";
 import {IncomeEdit} from "./components/category/income/income-edit";
 import {ExpenseList} from "./components/category/expense/expense-list";
+import {ExpenseCreate} from "./components/category/expense/expense-create";
+import {ExpenseEdit} from "./components/category/expense/expense-edit";
+import {ExpenseDelete} from "./components/category/expense/expense-delete";
 
 export class Router {
     constructor() {
@@ -113,7 +116,7 @@ export class Router {
                 filePathTemplate: '/templates/pages/category/expenses/create.html',
                 useLayout: '/templates/layout.html',
                 load: () => {
-                    // new SignUp();
+                    new ExpenseCreate();
                 },
             },
             {
@@ -122,13 +125,13 @@ export class Router {
                 filePathTemplate: '/templates/pages/category/expenses/edit.html',
                 useLayout: '/templates/layout.html',
                 load: () => {
-                    // new SignUp();
+                    new ExpenseEdit();
                 },
             },
             {
                 route: '#/expense/delete',
                 load: () => {
-                    // new SignUp();
+                    new ExpenseDelete();
                 },
             },
             {
