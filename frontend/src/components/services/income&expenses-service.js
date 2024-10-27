@@ -16,6 +16,21 @@ export class IncomeExpensesService {
         }
     }
 
+    static async getIncomeExpense(id) {
+        try {
+            const result = await HttpUtils.request(config.api + '/operations/' + id);
+
+            if (!result) {
+                alert ('Данные операций отсутствуют или некорректны.');
+                window.location.href = '/#';
+            }
+
+            return result;
+        } catch (error) {
+            return error;
+        }
+    }
+
     static async createIncomeExpenses(data) {
         try {
             const result = await HttpUtils.request(config.api + '/operations', 'POST', data);
@@ -23,6 +38,21 @@ export class IncomeExpensesService {
             // if (!result || !result.length) {
             //     throw new Error('Данные операций отсутствуют или некорректны.');
             // }
+
+            return result;
+        } catch (error) {
+            return error;
+        }
+    }
+
+    static async updateIncomeExpense(id, data) {
+        try {
+            const result = await HttpUtils.request(config.api + '/operations/' + id, 'PUT', data);
+
+            if (!result) {
+                alert ('Данные операций отсутствуют или некорректны.');
+                window.location.href = '/#';
+            }
 
             return result;
         } catch (error) {

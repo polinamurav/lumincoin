@@ -1,5 +1,4 @@
 import {IncomeExpensesService} from "../services/income&expenses-service";
-import config from "../../config/config";
 
 export class IncomeExpensesList {
     constructor() {

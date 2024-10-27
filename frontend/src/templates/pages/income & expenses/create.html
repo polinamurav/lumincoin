@@ -26,7 +26,10 @@
             </div>
         </div>
         <div class="col-12 col-sm-8 col-md-4 mb-2">
-            <input type="text" id="commentInput" class="form-control" placeholder="Комментарий...">
+            <input type="text" id="commentInput" class="form-control" aria-describedby="validationCommentFeedback"  placeholder="Комментарий...">
+            <div id="validationCommentFeedback" class="invalid-feedback">
+                Пожалуйста, напишите комментарий.
+            </div>
         </div>
     </div>
     <div class="actions pt-3">
