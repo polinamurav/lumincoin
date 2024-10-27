@@ -11,29 +11,29 @@
         </div>
         <div class="row g-3 pb-5">
             <div class="col-12 col-xl-2 col-lg-4 col-sm-6">
-                <button type="button" class="btn btn-secondary w-100">Сегодня</button>
+                <button type="button" class="btn border-secondary btn-secondary w-100" data-period="today">Сегодня</button>
             </div>
             <div class="col-12 col-xl-2 col-lg-4 col-sm-6">
-                <button type="button" class="btn border-secondary w-100">Неделя</button>
+                <button type="button" class="btn border-secondary w-100" data-period="week">Неделя</button>
             </div>
             <div class="col-12 col-xl-2 col-lg-4 col-sm-6">
-                <button type="button" class="btn border-secondary w-100">Месяц</button>
+                <button type="button" class="btn border-secondary w-100" data-period="month">Месяц</button>
             </div>
             <div class="col-12 col-xl-2 col-lg-4 col-sm-6">
-                <button type="button" class="btn border-secondary w-100">Год</button>
+                <button type="button" class="btn border-secondary w-100" data-period="year">Год</button>
             </div>
             <div class="col-12 col-xl-2 col-lg-4 col-sm-6">
-                <button type="button" class="btn border-secondary w-100">Все</button>
+                <button type="button" class="btn border-secondary w-100" data-period="all">Все</button>
             </div>
             <div class="col-12 col-xl-2 col-lg-4 col-sm-6">
-                <button type="button" class="btn border-secondary w-100">Интервал</button>
+                <button type="button" class="btn border-secondary w-100" data-period="interval">Интервал</button>
             </div>
             <div class="col-12 col-xl-2 col-lg-4 col-sm-6">
                 <div class="d-flex align-items-center">с
-                    <input type="date" class="input-date border-0 text-decoration-underline ms-2 me-2"
+                    <input type="date" name="dateFrom" class="input-date border-0 text-decoration-underline ms-2 me-2"
                            placeholder="Дата">
                     по
-                    <input type="date" class="input-date border-0 text-decoration-underline ms-2 ml-2"
+                    <input type="date" name="dateTo" class="input-date border-0 text-decoration-underline ms-2 ml-2"
                            placeholder="Дата">
                 </div>
             </div>

@@ -64,9 +64,6 @@ export class Router {
             },
             {
                 route: '#/logout',
-                load: () => {
-                    // new Logout();
-                },
             },
             {
                 route: '#/income',
@@ -148,9 +145,6 @@ export class Router {
                 title: 'Доходы и расходы',
                 filePathTemplate: '/templates/pages/income & expenses/create.html',
                 useLayout: '/templates/layout.html',
-                // load: () => {
-                //     new IncomeExpensesCreate();
-                // },
                 load: () => {
                     new IncomeExpensesCreate();
                 },
