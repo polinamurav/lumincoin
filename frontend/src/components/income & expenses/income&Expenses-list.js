@@ -99,13 +99,39 @@ export class IncomeExpensesList {
             trElement.insertCell().innerText = incomeExpenses[i].amount;
             trElement.insertCell().innerText = incomeExpenses[i].date;
             trElement.insertCell().innerText = incomeExpenses[i].comment;
-            trElement.insertCell().innerHTML = '<a href="#/income&expenses/delete?id=' + incomeExpenses[i].id + '" class="btn border-0 p-0 me-2">' +
-                '<i class="bi bi-trash me-2"></i></a>' +
-                '<a href="#/income&expenses/edit?id=' + incomeExpenses[i].id + '" class="btn border-0 p-0 me-2">' +
-                '<i class="bi bi-pencil"></i></a>';
+            // trElement.insertCell().innerHTML = '<a href="#/income&expenses/delete?id=' + incomeExpenses[i].id + '" class="btn border-0 p-0 me-2">' +
+            //     '<i class="bi bi-trash me-2"></i></a>' +
+            //     '<a href="#/income&expenses/edit?id=' + incomeExpenses[i].id + '" class="btn border-0 p-0 me-2">' +
+            //     '<i class="bi bi-pencil"></i></a>';
+
+            const actionCell = trElement.insertCell();
+            const deleteButton = document.createElement('button');
+            deleteButton.type = 'button';
+            deleteButton.className = 'btn border-0 p-0 me-2';
+            deleteButton.setAttribute('data-bs-toggle', 'modal');
+            deleteButton.setAttribute('data-bs-target', '#dateRangeModal');
+            deleteButton.innerHTML = '<i class="bi bi-trash me-2"></i>';
+
+            deleteButton.addEventListener('click', () => {
+                const deleteLink = document.querySelector('#dateRangeModal a[href="#/income&expenses/delete"]');
+                deleteLink.setAttribute('href', `#/income&expenses/delete?id=${incomeExpenses[i].id}`);
+            });
+
+            const editLink = document.createElement('a');
+            editLink.href = `#/income&expenses/edit?id=${incomeExpenses[i].id}`;
+            editLink.className = 'btn border-0 p-0';
+            editLink.innerHTML = '<i class="bi bi-pencil"></i>';
+            actionCell.appendChild(deleteButton);
+            actionCell.appendChild(editLink);
 
             recordsElement.appendChild(trElement);
         }
+
+        const deleteModal = document.getElementById('dateRangeModal');
+        deleteModal.addEventListener('hidden.bs.modal', () => {
+            const deleteLink = document.querySelector('#dateRangeModal a[href^="#/income&expenses/delete"]');
+            deleteLink.setAttribute('href', '#/income&expenses/delete');
+        });
 
     }
 }

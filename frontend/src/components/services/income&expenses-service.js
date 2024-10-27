@@ -29,4 +29,19 @@ export class IncomeExpensesService {
             return error;
         }
     }
+
+    static async deleteIncomeExpense(id) {
+        try {
+            const result = await HttpUtils.request(config.api + '/operations/' + id, 'DELETE');
+
+            if (!result) {
+                alert('Данные операций отсутствуют или некорректны.');
+                window.location.href = '/#';
+            }
+
+            return result;
+        } catch (error) {
+            return error;
+        }
+    }
 }
