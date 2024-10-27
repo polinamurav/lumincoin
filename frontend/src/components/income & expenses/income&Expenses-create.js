@@ -1,10 +1,19 @@
 import {IncomeExpensesService} from "../services/income&expenses-service";
+import {UrlUtils} from "../services/url-utils";
 
 export class IncomeExpensesCreate {
     constructor() {
+        const type = UrlUtils.getUrlParam('type');
+        if (!type) {
+            window.location.href = '/#';
+        }
+
         document.getElementById('createButton').addEventListener('click', this.saveIncomeExpenses.bind(this));
 
         this.typeInputElement = document.getElementById('typeInput');
+        if (type && (type === 'income' || type === 'expense')) {
+            this.typeInputElement.value = type;
+        }
         this.categoryInputElement = document.getElementById('categoryInput');
         this.amountInputElement = document.getElementById('amountInput');
         this.dateInputElement = document.getElementById('dateInput');

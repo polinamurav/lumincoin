@@ -3,6 +3,7 @@ import {IncomeExpensesService} from "../services/income&expenses-service";
 export class IncomeExpensesList {
     constructor() {
         this.buttonFilters();
+        this.createButtons();
         this.getIncomeExpenses('all').then();
         this.activeButton('today');
     }
@@ -48,6 +49,19 @@ export class IncomeExpensesList {
             this.getIncomeExpenses('interval', dateFrom, dateTo);
             this.activeButton('interval');
         });
+    }
+
+    createButtons() {
+        document.querySelectorAll('.create-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const type = e.currentTarget.getAttribute('data-type');
+                this.createOperation(type, '#/income&expenses/create');
+            })
+        })
+    }
+
+    createOperation(type, link) {
+        window.location.href = `${link}?type=${type}`;
     }
 
     activeButton(period) {
