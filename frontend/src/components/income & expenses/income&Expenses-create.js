@@ -1,5 +1,7 @@
 import {IncomeExpensesService} from "../services/income&expenses-service";
 import {UrlUtils} from "../services/url-utils";
+import {IncomeService} from "../services/income-service";
+import {ExpenseService} from "../services/expense-service";
 
 export class IncomeExpensesCreate {
     constructor() {
@@ -11,14 +13,53 @@ export class IncomeExpensesCreate {
         document.getElementById('createButton').addEventListener('click', this.saveIncomeExpenses.bind(this));
 
         this.typeInputElement = document.getElementById('typeInput');
-        if (type && (type === 'income' || type === 'expense')) {
-            this.typeInputElement.value = type;
-        }
         this.categoryInputElement = document.getElementById('categoryInput');
         this.amountInputElement = document.getElementById('amountInput');
         this.dateInputElement = document.getElementById('dateInput');
         this.commentInputElement = document.getElementById('commentInput');
 
+        if (type && (type === 'income' || type === 'expense')) {
+            this.typeInputElement.value = type;
+            if (type === 'income') {
+                this.getIncomes().then();
+            } else if (type === 'expense') {
+                this.getExpenses().then();
+            }
+        }
+    }
+
+    async getIncomes() {
+        const response = await IncomeService.getIncomes();
+
+        if (!response) {
+            alert(response);
+            return window.location.href = '#/';
+        }
+
+        this.showOptions(response);
+    }
+
+    async getExpenses() {
+        const response = await ExpenseService.getExpenses();
+
+        if (!response) {
+            alert(response);
+            return window.location.href = '#/';
+        }
+
+        this.showOptions(response);
+    }
+
+    showOptions(result) {
+        this.categoryInputElement.innerHTML = '';
+
+        for (let i = 0; i < result.length; i++) {
+            const optionElement = document.createElement('option');
+            optionElement.value = result[i].id;
+            optionElement.textContent = result[i].title;
+
+            this.categoryInputElement.appendChild(optionElement);
+        }
     }
 
     validateForm() {

@@ -1,4 +1,5 @@
 import {IncomeExpensesService} from "../services/income&expenses-service";
+import config from "../../config/config";
 
 export class IncomeExpensesList {
     constructor() {
@@ -94,7 +95,15 @@ export class IncomeExpensesList {
         for (let i = 0; i < incomeExpenses.length; i++) {
             const trElement = document.createElement('tr');
             trElement.insertCell().innerText = i + 1;
-            trElement.insertCell().innerText = incomeExpenses[i].type;
+
+            const typeCell = trElement.insertCell();
+            if (incomeExpenses[i].type === 'expense') {
+                typeCell.innerText = 'расход';
+                typeCell.className = 'text-danger';
+            } else if (incomeExpenses[i].type === 'income') {
+                typeCell.innerText = 'доход';
+                typeCell.className = 'text-success';
+            }
             trElement.insertCell().innerText = incomeExpenses[i].category;
             trElement.insertCell().innerText = incomeExpenses[i].amount;
             trElement.insertCell().innerText = incomeExpenses[i].date;
