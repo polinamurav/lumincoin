@@ -15,6 +15,8 @@ import {ExpenseCreate} from "./components/category/expense/expense-create";
 import {ExpenseEdit} from "./components/category/expense/expense-edit";
 import {ExpenseDelete} from "./components/category/expense/expense-delete";
 import {IncomeExpenseDelete} from "./components/income & expenses/income&Expense-delete";
+import {ExpenseService} from "./components/services/expense-service";
+import {BalanceService} from "./components/services/balance-service";
 
 export class Router {
     constructor() {
@@ -232,19 +234,14 @@ export class Router {
     }
 
     async getBalance() {
-        const result = await CustomHttp.request(config.api + '/balance');
+        const response = await BalanceService.getBalance();
 
-        // if (result.status === 401) {
-        //     window.location.href = '#/login';
-        //     return;
-        // }
-
-        if (result.error || !result.response) {
-            alert('Ошибка при запросе баланса. Обратитесь в поддержку');
-            return;
+        if (!response) {
+            alert(response);
+            return window.location.href = '#/';
         }
 
-        document.getElementById('balance').innerText = result.balance || 0;
+        document.getElementById('balance').innerText = response.balance || 0;
     }
 
     activateMenuItem(route) {
