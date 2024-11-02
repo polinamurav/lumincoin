@@ -5,12 +5,12 @@ export class IncomeExpensesList {
         this.buttonFilters();
         this.createButtons();
         this.getIncomeExpenses('all').then();
-        this.activeButton('today');
+        this.activeButton('all');
     }
 
     buttonFilters() {
         document.querySelector('button[data-period="today"]').addEventListener('click', () => {
-            this.getIncomeExpenses('all');
+            this.getIncomeExpenses('today');
             this.activeButton('today');
         });
 
@@ -20,24 +20,15 @@ export class IncomeExpensesList {
         });
 
         document.querySelector('button[data-period="week"]').addEventListener('click', () => {
-            const today = new Date();
-            const lastWeek = new Date();
-            lastWeek.setDate(today.getDate() - 7);
-            this.getIncomeExpenses('interval', lastWeek.toISOString().split('T')[0], today.toISOString().split('T')[0]);
+            this.getIncomeExpenses('week');
             this.activeButton('week');
         });
         document.querySelector('button[data-period="month"]').addEventListener('click', () => {
-            const today = new Date();
-            const lastMonth = new Date();
-            lastMonth.setMonth(today.getMonth() - 1);
-            this.getIncomeExpenses('interval', lastMonth.toISOString().split('T')[0], today.toISOString().split('T')[0]);
+            this.getIncomeExpenses('month');
             this.activeButton('month');
         });
         document.querySelector('button[data-period="year"]').addEventListener('click', () => {
-            const today = new Date();
-            const lastYear = new Date();
-            lastYear.setFullYear(today.getFullYear() - 1);
-            this.getIncomeExpenses('interval', lastYear.toISOString().split('T')[0], today.toISOString().split('T')[0]);
+            this.getIncomeExpenses('year');
             this.activeButton('year');
         });
 
@@ -46,7 +37,7 @@ export class IncomeExpensesList {
         document.querySelector('button[data-period="interval"]').addEventListener('click', () => {
             const dateFrom = fromDateInput.value || 'null';
             const dateTo = toDateInput.value || 'null';
-            this.getIncomeExpenses('interval', dateFrom, dateTo);
+            this.getIncomeExpenses('interval&dateFrom=' + dateFrom + '&dateTo=' + dateTo);
             this.activeButton('interval');
         });
     }
@@ -76,8 +67,8 @@ export class IncomeExpensesList {
         }
     }
 
-    async getIncomeExpenses(period = 'all', dateFrom = 'null', dateTo = 'null') {
-        const response = await IncomeExpensesService.getIncomeExpenses(period, dateFrom, dateTo);
+    async getIncomeExpenses(period = 'all') {
+        const response = await IncomeExpensesService.getIncomeExpenses(period);
 
         if (!response) {
             alert('Произошла ошибка');

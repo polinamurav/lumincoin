@@ -5,15 +5,20 @@ export class Main {
     constructor() {
         Chart.register(...registerables);
 
+        this.incomeChart = null;
+        this.expenseChart = null;
+
         this.buttonFilters();
-        this.activeButton('today');
+        this.activeButton('all');
         this.initializeChart();
     }
 
     async initializeChart() {
         const result = await this.getIncomeExpenses('all');
+        this.renderCharts(result);
+    }
 
-        // фильтр на доходы и расходы
+    renderCharts(result) {
         const incomeData = result.filter(item => item.type === 'income');
         const expenseData = result.filter(item => item.type === 'expense');
 
@@ -25,31 +30,22 @@ export class Main {
             datasets: [{
                 label: 'Доходы',
                 data: incomeValues,
-                backgroundColor: [
-                    '#DC3545',
-                    '#FD7E14',
-                    '#FFC107',
-                    '#20C997',
-                    '#0D6EFD',
-                ],
+                backgroundColor: ['#DC3545', '#FD7E14', '#FFC107', '#20C997', '#0D6EFD'],
                 hoverOffset: 4
             }]
         };
 
         const ctx = document.getElementById('myChart').getContext('2d');
-        new Chart(ctx, {
+        this.incomeChart = new Chart(ctx, {
             type: 'pie',
             data: incomeChartData,
             options: {
                 responsive: true,
                 plugins: {
-                    legend: {
-                        position: 'top',
-                    },
+                    legend: { position: 'top' }
                 }
             }
         });
-
 
         const expenseLabels = expenseData.map(item => item.category);
         const expenseValues = expenseData.map(item => item.amount);
@@ -59,64 +55,46 @@ export class Main {
             datasets: [{
                 label: 'Расходы',
                 data: expenseValues,
-                backgroundColor: [
-                    '#DC3545',
-                    '#FD7E14',
-                    '#FFC107',
-                    '#20C997',
-                    '#0D6EFD',
-                ],
+                backgroundColor: ['#DC3545', '#FD7E14', '#FFC107', '#20C997', '#0D6EFD'],
                 hoverOffset: 4
             }]
         };
 
         const ctx2 = document.getElementById('diagram2').getContext('2d');
-        new Chart(ctx2, {
+        this.expenseChart = new Chart(ctx2, {
             type: 'pie',
             data: expenseChartData,
             options: {
                 responsive: true,
                 plugins: {
-                    legend: {
-                        position: 'top',
-                    },
+                    legend: { position: 'top' }
                 }
             }
         });
+    }
 
+    async updateCharts(period) {
+        const result = await this.getIncomeExpenses(period);
+
+        const incomeData = result.filter(item => item.type === 'income');
+        const expenseData = result.filter(item => item.type === 'expense');
+
+        this.incomeChart.data.labels = incomeData.map(item => item.category);
+        this.incomeChart.data.datasets[0].data = incomeData.map(item => item.amount);
+        this.incomeChart.update();
+
+        this.expenseChart.data.labels = expenseData.map(item => item.category);
+        this.expenseChart.data.datasets[0].data = expenseData.map(item => item.amount);
+        this.expenseChart.update();
     }
 
     buttonFilters() {
-        document.querySelector('button[data-period="today"]').addEventListener('click', () => {
-            this.getIncomeExpenses('all');
-            this.activeButton('today');
-        });
-
-        document.querySelector('button[data-period="all"]').addEventListener('click', () => {
-            this.getIncomeExpenses('all');
-            this.activeButton('all');
-        });
-
-        document.querySelector('button[data-period="week"]').addEventListener('click', () => {
-            const today = new Date();
-            const lastWeek = new Date();
-            lastWeek.setDate(today.getDate() - 7);
-            this.getIncomeExpenses('interval', lastWeek.toISOString().split('T')[0], today.toISOString().split('T')[0]);
-            this.activeButton('week');
-        });
-        document.querySelector('button[data-period="month"]').addEventListener('click', () => {
-            const today = new Date();
-            const lastMonth = new Date();
-            lastMonth.setMonth(today.getMonth() - 1);
-            this.getIncomeExpenses('interval', lastMonth.toISOString().split('T')[0], today.toISOString().split('T')[0]);
-            this.activeButton('month');
-        });
-        document.querySelector('button[data-period="year"]').addEventListener('click', () => {
-            const today = new Date();
-            const lastYear = new Date();
-            lastYear.setFullYear(today.getFullYear() - 1);
-            this.getIncomeExpenses('interval', lastYear.toISOString().split('T')[0], today.toISOString().split('T')[0]);
-            this.activeButton('year');
+        document.querySelectorAll('button[data-period]').forEach(button => {
+            button.addEventListener('click', () => {
+                const period = button.getAttribute('data-period');
+                this.updateCharts(period);
+                this.activeButton(period);
+            });
         });
 
         const fromDateInput = document.querySelector('input[name="dateFrom"]');
@@ -124,7 +102,7 @@ export class Main {
         document.querySelector('button[data-period="interval"]').addEventListener('click', () => {
             const dateFrom = fromDateInput.value || 'null';
             const dateTo = toDateInput.value || 'null';
-            this.getIncomeExpenses('interval', dateFrom, dateTo);
+            this.updateCharts(`interval&dateFrom=${dateFrom}&dateTo=${dateTo}`);
             this.activeButton('interval');
         });
     }
@@ -141,8 +119,8 @@ export class Main {
         }
     }
 
-    async getIncomeExpenses(period = 'all', dateFrom = 'null', dateTo = 'null') {
-        const response = await IncomeExpensesService.getIncomeExpenses(period, dateFrom, dateTo);
+    async getIncomeExpenses(period = 'all') {
+        const response = await IncomeExpensesService.getIncomeExpenses(period);
 
         if (!response) {
             alert('Произошла ошибка');
@@ -151,5 +129,4 @@ export class Main {
 
         return response;
     }
-
 }

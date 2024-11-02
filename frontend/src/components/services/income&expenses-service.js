@@ -2,9 +2,9 @@ import {CustomHttp as HttpUtils} from "./custom-http";
 import config from "../../config/config";
 
 export class IncomeExpensesService {
-    static async getIncomeExpenses(period = 'all', dateFrom = 'null', dateTo = 'null') {
+    static async getIncomeExpenses(period = 'all') {
         try {
-            const result = await HttpUtils.request(config.api + '/operations?period=' + period + '&dateFrom=' + dateFrom + '&dateTo=' + dateTo);
+            const result = await HttpUtils.request(config.api + '/operations?period=' + period);
 
             if (!result) {
                 throw new Error('Данные операций отсутствуют или некорректны.');
