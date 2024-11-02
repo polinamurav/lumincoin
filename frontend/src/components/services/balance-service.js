@@ -5,11 +5,7 @@ export class BalanceService {
     static async getBalance() {
         try {
             const result = await HttpUtils.request(config.api + '/balance');
-
-            if (!result || !result.length || result.error) {
-                alert('Данные операций отсутствуют или некорректны.');
-                window.location.href = '/#';
-            }
+            console.log(result);
 
             return result;
         } catch (error) {

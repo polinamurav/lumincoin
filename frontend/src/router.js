@@ -92,7 +92,7 @@ export class Router {
                 filePathTemplate: '/templates/pages/category/income/edit.html',
                 useLayout: '/templates/layout.html',
                 load: () => {
-                   new IncomeEdit();
+                    new IncomeEdit();
                 },
             },
             {
@@ -206,6 +206,7 @@ export class Router {
                     contentBlock = document.getElementById('content-layout');
                 }
                 contentBlock.innerHTML = await fetch(newRoute.filePathTemplate).then(response => response.text());
+                await this.getBalance();
 
                 this.profileNameElement = document.getElementById('user-name');
                 if (!this.userName) {
@@ -221,8 +222,6 @@ export class Router {
                     this.profileNameElement.innerText = this.userName;
                 }
                 this.activateMenuItem(newRoute);
-
-                // await this.getBalance();
             }
 
             if (newRoute.load && typeof newRoute.load === 'function') {
@@ -241,7 +240,11 @@ export class Router {
             return window.location.href = '#/';
         }
 
-        document.getElementById('balance').innerText = response.balance || 0;
+        document.getElementById('balance').innerText = response.balance + '$' || 0;
+        const balancePhone = document.getElementById('balance2');
+        if (balancePhone) {
+            balancePhone.innerText = response.balance + '$' || 0;
+        }
     }
 
     activateMenuItem(route) {
