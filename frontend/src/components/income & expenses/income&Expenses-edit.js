@@ -111,31 +111,29 @@ export class IncomeExpensesEdit {
         e.preventDefault();
 
         if (this.validateForm()) {
-            const changedData = {};
             if (this.typeInputElement.value !== this.incomeExpenseOriginalData.type) {
-                changedData.type = this.typeInputElement.value;
+                this.incomeExpenseOriginalData.type = this.typeInputElement.value;
             }
             if (parseInt(this.categoryInputElement.value) !== parseInt(this.incomeExpenseOriginalData.category_id)) {
-                changedData.category_id = parseInt(this.categoryInputElement.value);
+                this.incomeExpenseOriginalData.category_id = parseInt(this.categoryInputElement.value);
             }
             if (parseFloat(this.amountInputElement.value) !== parseFloat(this.incomeExpenseOriginalData.amount)) {
-                changedData.amount = parseFloat(this.amountInputElement.value);
+                this.incomeExpenseOriginalData.amount = parseFloat(this.amountInputElement.value);
             }
             if (this.dateInputElement.value !== this.incomeExpenseOriginalData.date) {
-                changedData.date = this.dateInputElement.value;
+                this.incomeExpenseOriginalData.date = this.dateInputElement.value;
             }
             if (this.commentInputElement.value !== this.incomeExpenseOriginalData.comment) {
-                changedData.comment = this.commentInputElement.value;
+                this.incomeExpenseOriginalData.comment = this.commentInputElement.value;
             }
-            if (Object.keys(changedData).length > 0) {
-                const response = await IncomeExpensesService.updateIncomeExpense(this.incomeExpenseOriginalData.id, changedData);
+                const response = await IncomeExpensesService.updateIncomeExpense(this.incomeExpenseOriginalData.id, this.incomeExpenseOriginalData);
 
                 if (!response) {
                     alert("Произошла ошибка");
                 }
 
                 return window.location.href = '#/income&expenses';
-            }
+
         }
         return window.location.href = '#/income&expenses';
     }
