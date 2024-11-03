@@ -2,6 +2,7 @@ import {CustomHttp as HttpUtils} from "./custom-http";
 import config from "../../config/config";
 import {IncomeExpenseType} from "../../types/income-expense.type";
 import {DefaultResponseType} from "../../types/default-response.type";
+import {IncomeExpenseCreateType} from "../../types/income-expense-create.type";
 
 //done
 export class IncomeExpensesService {
@@ -43,9 +44,9 @@ export class IncomeExpensesService {
         }
     }
 
-    public static async createIncomeExpenses(data: IncomeExpenseType): Promise<IncomeExpenseType> {
+    public static async createIncomeExpenses(data: IncomeExpenseCreateType): Promise<IncomeExpenseCreateType> {
         try {
-            const result: IncomeExpenseType | DefaultResponseType = await HttpUtils.request(config.api + '/operations', 'POST', data);
+            const result: IncomeExpenseCreateType | DefaultResponseType = await HttpUtils.request(config.api + '/operations', 'POST', data);
 
             if (!result) {
                 alert('Данные операций отсутствуют или некорректны.');
@@ -57,7 +58,7 @@ export class IncomeExpensesService {
                 throw new Error((result as DefaultResponseType).message);
             }
 
-            return result as IncomeExpenseType;
+            return result as IncomeExpenseCreateType;
         } catch (error) {
             console.error('Ошибка при получении данных:', error);
             return;

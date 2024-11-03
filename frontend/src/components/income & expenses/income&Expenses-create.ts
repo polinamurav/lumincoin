@@ -2,21 +2,33 @@ import {IncomeExpensesService} from "../services/income&expenses-service";
 import {UrlUtils} from "../services/url-utils";
 import {IncomeService} from "../services/income-service";
 import {ExpenseService} from "../services/expense-service";
+import {CategoryIncomeType} from "../../types/category-income.type";
+import {IncomeExpenseCreateType} from "../../types/income-expense-create.type";
 
+//done
 export class IncomeExpensesCreate {
+    readonly typeInputElement: HTMLInputElement | null;
+    readonly categoryInputElement: HTMLInputElement | null;
+    readonly amountInputElement: HTMLInputElement | null;
+    readonly dateInputElement: HTMLInputElement | null;
+    readonly commentInputElement: HTMLInputElement | null;
+
     constructor() {
-        const type = UrlUtils.getUrlParam('type');
+        const type: string | null = UrlUtils.getUrlParam('type');
         if (!type) {
             window.location.href = '/#';
         }
 
-        document.getElementById('createButton').addEventListener('click', this.saveIncomeExpenses.bind(this));
+        const createButton: HTMLElement | null = document.getElementById('createButton');
+        if (createButton) {
+            createButton.addEventListener('click', this.saveIncomeExpenses.bind(this));
+        }
 
-        this.typeInputElement = document.getElementById('typeInput');
-        this.categoryInputElement = document.getElementById('categoryInput');
-        this.amountInputElement = document.getElementById('amountInput');
-        this.dateInputElement = document.getElementById('dateInput');
-        this.commentInputElement = document.getElementById('commentInput');
+        this.typeInputElement = document.getElementById('typeInput') as HTMLInputElement;
+        this.categoryInputElement = document.getElementById('categoryInput') as HTMLInputElement;
+        this.amountInputElement = document.getElementById('amountInput') as HTMLInputElement;
+        this.dateInputElement = document.getElementById('dateInput') as HTMLInputElement;
+        this.commentInputElement = document.getElementById('commentInput') as HTMLInputElement;
 
         if (type && (type === 'income' || type === 'expense')) {
             this.typeInputElement.value = type;
@@ -28,75 +40,89 @@ export class IncomeExpensesCreate {
         }
     }
 
-    async getIncomes() {
-        const response = await IncomeService.getIncomes();
+    private async getIncomes(): Promise<void> {
+        const response: CategoryIncomeType[] = await IncomeService.getIncomes();
 
         if (!response) {
             alert(response);
-            return window.location.href = '#/';
+            window.location.href = '#/';
+            return;
         }
 
         this.showOptions(response);
     }
 
-    async getExpenses() {
-        const response = await ExpenseService.getExpenses();
+    private async getExpenses(): Promise<void> {
+        const response: CategoryIncomeType[] = await ExpenseService.getExpenses();
 
         if (!response) {
             alert(response);
-            return window.location.href = '#/';
+            window.location.href = '#/';
+            return;
         }
 
         this.showOptions(response);
     }
 
-    showOptions(result) {
-        this.categoryInputElement.innerHTML = '';
+    private showOptions(result): void {
+        if (this.categoryInputElement) {
+            this.categoryInputElement.innerHTML = '';
+        }
 
-        for (let i = 0; i < result.length; i++) {
-            const optionElement = document.createElement('option');
+        for (let i: number = 0; i < result.length; i++) {
+            const optionElement: HTMLOptionElement | null = document.createElement('option');
             optionElement.value = result[i].id;
             optionElement.textContent = result[i].title;
 
-            this.categoryInputElement.appendChild(optionElement);
+            if (this.categoryInputElement) {
+                this.categoryInputElement.appendChild(optionElement);
+            }
         }
     }
 
-    validateForm() {
-        let isValid = true;
-        let textInputArray = [this.typeInputElement, this.categoryInputElement, this.amountInputElement,
+    private validateForm(): boolean {
+        let isValid: boolean = true;
+        let textInputArray: (HTMLInputElement | null)[] = [this.typeInputElement, this.categoryInputElement, this.amountInputElement,
             this.dateInputElement, this.commentInputElement];
-        for (let i = 0; i < textInputArray.length; i++) {
-            if (textInputArray[i].value) {
-                textInputArray[i].classList.remove('is-invalid');
-            } else {
-                textInputArray[i].classList.add('is-invalid');
-                isValid = false;
+        for (let i: number = 0; i < textInputArray.length; i++) {
+            const inputElement: HTMLInputElement | null = textInputArray[i];
+            if (inputElement) {
+                if (inputElement.value) {
+                    inputElement.classList.remove('is-invalid');
+                } else {
+                    inputElement.classList.add('is-invalid');
+                    isValid = false;
+                }
             }
         }
         return isValid;
     }
 
-
-    async saveIncomeExpenses(e) {
+    private async saveIncomeExpenses(e: MouseEvent): Promise<void> {
         e.preventDefault();
 
         if (this.validateForm()) {
-            const createData = {
-                type: this.typeInputElement.value,
-                category_id: parseInt(this.categoryInputElement.value),
-                amount: parseFloat(this.amountInputElement.value),
-                date: this.dateInputElement.value,
-                comment: this.commentInputElement.value,
+            const type: string = this.typeInputElement ? this.typeInputElement.value : '';
+            const categoryId: number = this.categoryInputElement ? parseInt(this.categoryInputElement.value) : 0;
+            const amount: number = this.amountInputElement ? parseFloat(this.amountInputElement.value) : 0;
+            const date: string = this.dateInputElement ? this.dateInputElement.value : '';
+            const comment: string = this.commentInputElement ? this.commentInputElement.value : '';
+
+            const createData: IncomeExpenseCreateType = {
+                type,
+                category_id: categoryId,
+                amount,
+                date,
+                comment,
             };
 
-            const response = await IncomeExpensesService.createIncomeExpenses(createData);
+            const response: IncomeExpenseCreateType = await IncomeExpensesService.createIncomeExpenses(createData);
 
             if (!response) {
                 alert("Произошла ошибка");
             }
 
-            return window.location.href = '#/income&expenses';
+            window.location.href = '#/income&expenses';
         }
     }
 }
