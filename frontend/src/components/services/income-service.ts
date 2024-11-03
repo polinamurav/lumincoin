@@ -1,79 +1,104 @@
 import {CustomHttp as HttpUtils} from "./custom-http";
 import config from "../../config/config";
+import {CategoryIncomeType} from "../../types/category-income.type";
+import {DefaultResponseType} from "../../types/default-response.type";
 
+//done
 export class IncomeService {
-    static async getIncomes() {
+    public static async getIncomes(): Promise<CategoryIncomeType[]> {
         try {
-            const result = await HttpUtils.request(config.api + '/categories/income');
-
-            if (!result || !result.length || result.error) {
-                alert ('Данные операций отсутствуют или некорректны.');
-                window.location.href = '/#';
-            }
-
-            return result;
-        } catch (error) {
-            return error;
-        }
-    }
-
-    static async getIncome(id) {
-        try {
-            const result = await HttpUtils.request(config.api + '/categories/income/' + id);
+            const result: CategoryIncomeType[] = await HttpUtils.request(config.api + '/categories/income');
 
             if (!result) {
                 alert ('Данные операций отсутствуют или некорректны.');
                 window.location.href = '/#';
+                return;
             }
 
             return result;
         } catch (error) {
-            return error;
+            console.error('Ошибка при получении данных:', error);
+            return;
         }
     }
 
-    static async createIncome(data) {
+    public static async getIncome(id: number): Promise<CategoryIncomeType> {
         try {
-            const result = await HttpUtils.request(config.api + '/categories/income', 'POST', data);
+            const result: CategoryIncomeType | DefaultResponseType = await HttpUtils.request(config.api + '/categories/income/' + id);
 
             if (!result) {
                 alert ('Данные операций отсутствуют или некорректны.');
                 window.location.href = '/#';
+                return;
             }
 
-            return result;
+            if ((result as DefaultResponseType).error !== undefined) {
+                throw new Error((result as DefaultResponseType).message);
+            }
+
+            return result as CategoryIncomeType;
         } catch (error) {
-            return error;
+            console.error('Ошибка при получении данных:', error);
+            return;
         }
     }
 
-    static async deleteIncome(id) {
+    public static async createIncome(data: CategoryIncomeType): Promise<CategoryIncomeType> {
         try {
-            const result = await HttpUtils.request(config.api + '/categories/income/' + id, 'DELETE');
+            const result: CategoryIncomeType | DefaultResponseType = await HttpUtils.request(config.api + '/categories/income', 'POST', data);
 
             if (!result) {
                 alert ('Данные операций отсутствуют или некорректны.');
                 window.location.href = '/#';
+                return;
             }
 
-            return result;
+            if ((result as DefaultResponseType).error !== undefined) {
+                throw new Error((result as DefaultResponseType).message);
+            }
+
+            return result as CategoryIncomeType;
         } catch (error) {
-            return error;
+            console.error('Ошибка при получении данных:', error);
+            return;
         }
     }
 
-    static async updateIncome(id, data) {
+    public static async deleteIncome(id: number): Promise<boolean> {
         try {
-            const result = await HttpUtils.request(config.api + '/categories/income/' + id, 'PUT', data);
+            const result: DefaultResponseType = await HttpUtils.request(config.api + '/categories/income/' + id, 'DELETE');
 
             if (!result) {
                 alert ('Данные операций отсутствуют или некорректны.');
                 window.location.href = '/#';
+                return false;
             }
 
-            return result;
+            return true;
         } catch (error) {
-            return error;
+            console.error('Ошибка при получении данных:', error);
+            return false;
+        }
+    }
+
+    public static async updateIncome(id: number, data): Promise<CategoryIncomeType> {
+        try {
+            const result: CategoryIncomeType | DefaultResponseType = await HttpUtils.request(config.api + '/categories/income/' + id, 'PUT', data);
+
+            if (!result) {
+                alert ('Данные операций отсутствуют или некорректны.');
+                window.location.href = '/#';
+                return;
+            }
+
+            if ((result as DefaultResponseType).error !== undefined) {
+                throw new Error((result as DefaultResponseType).message);
+            }
+
+            return result as CategoryIncomeType;
+        } catch (error) {
+            console.error('Ошибка при получении данных:', error);
+            return;
         }
     }
 }
