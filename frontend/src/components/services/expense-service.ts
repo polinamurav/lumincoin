@@ -1,79 +1,104 @@
 import {CustomHttp as HttpUtils} from "./custom-http";
 import config from "../../config/config";
+import {CategoryExpenseType} from "../../types/category-expense.type";
+import {DefaultResponseType} from "../../types/default-response.type";
 
+//done
 export class ExpenseService {
-    static async getExpenses() {
+    public static async getExpenses(): Promise<CategoryExpenseType[]> {
         try {
-            const result = await HttpUtils.request(config.api + '/categories/expense');
-
-            if (!result || !result.length || result.error) {
-                alert ('Данные операций отсутствуют или некорректны.');
-                window.location.href = '/#';
-            }
-
-            return result;
-        } catch (error) {
-            return error;
-        }
-    }
-
-    static async getExpense(id) {
-        try {
-            const result = await HttpUtils.request(config.api + '/categories/expense/' + id);
+            const result: CategoryExpenseType[] = await HttpUtils.request(config.api + '/categories/expense');
 
             if (!result) {
                 alert ('Данные операций отсутствуют или некорректны.');
                 window.location.href = '/#';
+                return;
             }
 
             return result;
         } catch (error) {
-            return error;
+            console.error('Ошибка при получении данных:', error);
+            return;
         }
     }
 
-    static async createExpense(data) {
+    public static async getExpense(id: number): Promise<CategoryExpenseType> {
         try {
-            const result = await HttpUtils.request(config.api + '/categories/expense', 'POST', data);
+            const result: CategoryExpenseType | DefaultResponseType = await HttpUtils.request(config.api + '/categories/expense/' + id);
+
+            if (!result) {
+                alert('Данные операций отсутствуют или некорректны.');
+                window.location.href = '/#';
+                return;
+            }
+
+            if ((result as DefaultResponseType).error !== undefined) {
+                throw new Error((result as DefaultResponseType).message);
+            }
+
+            return result as CategoryExpenseType;
+        } catch (error) {
+            console.error('Ошибка при получении данных:', error);
+            return;
+        }
+    }
+
+    public static async createExpense(data: CategoryExpenseType): Promise<CategoryExpenseType> {
+        try {
+            const result: CategoryExpenseType | DefaultResponseType = await HttpUtils.request(config.api + '/categories/expense', 'POST', data);
+
+            if (!result) {
+                alert('Данные операций отсутствуют или некорректны.');
+                window.location.href = '/#';
+                return;
+            }
+
+            if ((result as DefaultResponseType).error !== undefined) {
+                throw new Error((result as DefaultResponseType).message);
+            }
+
+            return result as CategoryExpenseType;
+        } catch (error) {
+            console.error('Ошибка при получении данных:', error);
+            return;
+        }
+    }
+
+    public static async updateExpense(id: number, data): Promise<CategoryExpenseType> {
+        try {
+            const result: CategoryExpenseType | DefaultResponseType = await HttpUtils.request(config.api + '/categories/expense/' + id, 'PUT', data);
+
+            if (!result) {
+                alert('Данные операций отсутствуют или некорректны.');
+                window.location.href = '/#';
+                return;
+            }
+
+            if ((result as DefaultResponseType).error !== undefined) {
+                throw new Error((result as DefaultResponseType).message);
+            }
+
+            return result as CategoryExpenseType;
+        } catch (error) {
+            console.error('Ошибка при получении данных:', error);
+            return;
+        }
+    }
+
+    public static async deleteExpense(id: number): Promise<boolean> {
+        try {
+            const result: DefaultResponseType = await HttpUtils.request(config.api + '/categories/expense/' + id, 'DELETE');
 
             if (!result) {
                 alert ('Данные операций отсутствуют или некорректны.');
                 window.location.href = '/#';
+                return false;
             }
 
-            return result;
+            return true;
         } catch (error) {
-            return error;
-        }
-    }
-
-    static async updateExpense(id, data) {
-        try {
-            const result = await HttpUtils.request(config.api + '/categories/expense/' + id, 'PUT', data);
-
-            if (!result) {
-                alert ('Данные операций отсутствуют или некорректны.');
-                window.location.href = '/#';
-            }
-
-            return result;
-        } catch (error) {
-            return error;
-        }
-    }
-
-    static async deleteExpense(id) {
-        try {
-            const result = await HttpUtils.request(config.api + '/categories/expense/' + id, 'DELETE');
-
-            if (!result) {
-                alert ('Данные операций отсутствуют или некорректны.');
-                window.location.href = '/#';
-            }
-
-            return result;
-        } catch (error) {
-            return error;
+            alert('Произошла ошибка при удалении.');
+            return false;
         }
     }
 }
