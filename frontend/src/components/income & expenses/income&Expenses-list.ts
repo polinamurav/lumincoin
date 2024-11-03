@@ -1,5 +1,7 @@
 import {IncomeExpensesService} from "../services/income&expenses-service";
+import {IncomeExpenseType} from "../../types/income-expense.type";
 
+//done
 export class IncomeExpensesList {
     constructor() {
         this.buttonFilters();
@@ -8,7 +10,7 @@ export class IncomeExpensesList {
         this.activeButton('all');
     }
 
-    buttonFilters() {
+    private buttonFilters(): void {
         document.querySelector('button[data-period="today"]').addEventListener('click', () => {
             this.getIncomeExpenses('today');
             this.activeButton('today');
@@ -32,61 +34,65 @@ export class IncomeExpensesList {
             this.activeButton('year');
         });
 
-        const fromDateInput = document.querySelector('input[name="dateFrom"]');
-        const toDateInput = document.querySelector('input[name="dateTo"]');
+        const fromDateInput: HTMLInputElement | null = document.querySelector('input[name="dateFrom"]');
+        const toDateInput: HTMLInputElement | null = document.querySelector('input[name="dateTo"]');
         document.querySelector('button[data-period="interval"]').addEventListener('click', () => {
-            const dateFrom = fromDateInput.value || 'null';
-            const dateTo = toDateInput.value || 'null';
+            const dateFrom = (fromDateInput as HTMLInputElement).value || 'null';
+            const dateTo = (toDateInput as HTMLInputElement).value || 'null';
             this.getIncomeExpenses('interval&dateFrom=' + dateFrom + '&dateTo=' + dateTo);
             this.activeButton('interval');
         });
     }
 
-    createButtons() {
+    private createButtons(): void {
         document.querySelectorAll('.create-button').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const type = e.currentTarget.getAttribute('data-type');
+            button.addEventListener('click', (e: Event): void => {
+                const target = e.currentTarget as HTMLElement;
+                const type: string = target.getAttribute('data-type');
                 this.createOperation(type, '#/income&expenses/create');
             })
         })
     }
 
-    createOperation(type, link) {
+    private createOperation(type, link): void {
         window.location.href = `${link}?type=${type}`;
     }
 
-    activeButton(period) {
-        const buttons = document.querySelectorAll('button[data-period]');
+    private activeButton(period): void {
+        const buttons: NodeListOf<Element> = document.querySelectorAll('button[data-period]');
         buttons.forEach(button => {
             button.classList.remove('btn-secondary');
         })
 
-        const activeButton = document.querySelector(`button[data-period="${period}"]`);
+        const activeButton: HTMLElement | null = document.querySelector(`button[data-period="${period}"]`);
         if (activeButton) {
             activeButton.classList.add('btn-secondary');
         }
     }
 
-    async getIncomeExpenses(period = 'all') {
-        const response = await IncomeExpensesService.getIncomeExpenses(period);
+    private async getIncomeExpenses(period: string = 'all'): Promise<void> {
+        const response: IncomeExpenseType[] = await IncomeExpensesService.getIncomeExpenses(period);
 
         if (!response) {
             alert('Произошла ошибка');
-            return window.location.href = '#/';
+            window.location.href = '#/';
+            return;
         }
 
         this.showRecords(response);
     }
 
-    showRecords(incomeExpenses) {
-        const recordsElement = document.getElementById('records');
-        recordsElement.innerHTML = '';
+    private showRecords(incomeExpenses): void {
+        const recordsElement: HTMLElement | null = document.getElementById('records');
+        if (recordsElement) {
+            recordsElement.innerHTML = '';
+        }
 
-        for (let i = 0; i < incomeExpenses.length; i++) {
-            const trElement = document.createElement('tr');
-            trElement.insertCell().innerText = i + 1;
+        for (let i: number = 0; i < incomeExpenses.length; i++) {
+            const trElement: HTMLTableRowElement | null = document.createElement('tr');
+            trElement.insertCell().innerText = i.toString() + 1;
 
-            const typeCell = trElement.insertCell();
+            const typeCell: HTMLElement | null = trElement.insertCell();
             if (incomeExpenses[i].type === 'expense') {
                 typeCell.innerText = 'расход';
                 typeCell.className = 'text-danger';
@@ -98,13 +104,9 @@ export class IncomeExpensesList {
             trElement.insertCell().innerText = incomeExpenses[i].amount;
             trElement.insertCell().innerText = incomeExpenses[i].date;
             trElement.insertCell().innerText = incomeExpenses[i].comment;
-            // trElement.insertCell().innerHTML = '<a href="#/income&expenses/delete?id=' + incomeExpenses[i].id + '" class="btn border-0 p-0 me-2">' +
-            //     '<i class="bi bi-trash me-2"></i></a>' +
-            //     '<a href="#/income&expenses/edit?id=' + incomeExpenses[i].id + '" class="btn border-0 p-0 me-2">' +
-            //     '<i class="bi bi-pencil"></i></a>';
 
-            const actionCell = trElement.insertCell();
-            const deleteButton = document.createElement('button');
+            const actionCell: HTMLElement | null = trElement.insertCell();
+            const deleteButton: HTMLButtonElement = document.createElement('button');
             deleteButton.type = 'button';
             deleteButton.className = 'btn border-0 p-0 me-2';
             deleteButton.setAttribute('data-bs-toggle', 'modal');
@@ -112,25 +114,28 @@ export class IncomeExpensesList {
             deleteButton.innerHTML = '<i class="bi bi-trash me-2"></i>';
 
             deleteButton.addEventListener('click', () => {
-                const deleteLink = document.querySelector('#dateRangeModal a[href="#/income&expenses/delete"]');
+                const deleteLink: Element = document.querySelector('#dateRangeModal a[href="#/income&expenses/delete"]');
                 deleteLink.setAttribute('href', `#/income&expenses/delete?id=${incomeExpenses[i].id}`);
             });
 
-            const editLink = document.createElement('a');
+            const editLink: HTMLAnchorElement = document.createElement('a');
             editLink.href = `#/income&expenses/edit?id=${incomeExpenses[i].id}`;
             editLink.className = 'btn border-0 p-0';
             editLink.innerHTML = '<i class="bi bi-pencil"></i>';
             actionCell.appendChild(deleteButton);
             actionCell.appendChild(editLink);
 
-            recordsElement.appendChild(trElement);
+            if (recordsElement) {
+                recordsElement.appendChild(trElement);
+            }
         }
 
-        const deleteModal = document.getElementById('dateRangeModal');
-        deleteModal.addEventListener('hidden.bs.modal', () => {
-            const deleteLink = document.querySelector('#dateRangeModal a[href^="#/income&expenses/delete"]');
-            deleteLink.setAttribute('href', '#/income&expenses/delete');
-        });
-
+        const deleteModal: HTMLElement | null = document.getElementById('dateRangeModal');
+        if (deleteModal) {
+            deleteModal.addEventListener('hidden.bs.modal', () => {
+                const deleteLink = document.querySelector('#dateRangeModal a[href^="#/income&expenses/delete"]');
+                deleteLink.setAttribute('href', '#/income&expenses/delete');
+            });
+        }
     }
 }
