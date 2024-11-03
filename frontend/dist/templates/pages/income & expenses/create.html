@@ -2,23 +2,38 @@
     <h2 class="mb-5">Создание дохода/расхода</h2>
     <div class="row d-flex flex-column">
         <div class="col-12 col-sm-8 col-md-4 mb-2">
-            <input type="text" class="form-control" placeholder="Тип...">
+            <select name="type" id="typeInput" class="form-control" disabled>
+                <option value="income">Доход</option>
+                <option value="expense">Расход</option>
+            </select>
         </div>
         <div class="col-12 col-sm-8 col-md-4 mb-2">
-            <input type="text" class="form-control" placeholder="Категория...">
+            <select name="category_id" id="categoryInput" class="form-control" placeholder="Категория...">
+                <option value="1">Еда</option>
+                <option value="2">Транспорт</option>
+            </select>
         </div>
         <div class="col-12 col-sm-8 col-md-4 mb-2">
-            <input type="text" class="form-control" placeholder="Сумма в $...">
+            <input type="number" id="amountInput" class="form-control" aria-describedby="validationAmountFeedback" placeholder="Сумма в $...">
+            <div id="validationAmountFeedback" class="invalid-feedback">
+                Пожалуйста, введите сумму.
+            </div>
         </div>
         <div class="col-12 col-sm-8 col-md-4 mb-2">
-            <input type="text" class="form-control" placeholder="Дата...">
+            <input type="date" id="dateInput" class="form-control" aria-describedby="validationDateFeedback" placeholder="Дата...">
+            <div id="validationDateFeedback" class="invalid-feedback">
+                Пожалуйста, выберите дату.
+            </div>
         </div>
         <div class="col-12 col-sm-8 col-md-4 mb-2">
-            <input type="text" class="form-control" placeholder="Комментарий...">
+            <input type="text" id="commentInput" class="form-control" aria-describedby="validationCommentFeedback"  placeholder="Комментарий...">
+            <div id="validationCommentFeedback" class="invalid-feedback">
+                Пожалуйста, напишите комментарий.
+            </div>
         </div>
     </div>
     <div class="actions pt-3">
         <button type="button" class="btn btn-success me-2" id="createButton">Создать</button>
-        <a href="/income&expenses" class="btn btn-danger">Отмена</a>
+        <a href="#/income&expenses" class="btn btn-danger">Отмена</a>
     </div>
 </div>

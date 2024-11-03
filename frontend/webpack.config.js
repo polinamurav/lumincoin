@@ -4,21 +4,9 @@ const path = require('path');
 // const Dotenv = require('dotenv-webpack');
 
 module.exports = {
-    entry: './src/app.js',
+    entry: './src/app.ts',
     mode: 'development',
-    output: {
-        filename: 'app.js',
-        path: path.resolve(__dirname, 'dist'),
-        publicPath: '/'
-    },
-    devServer: {
-        static: {
-            directory: path.join(__dirname, 'public'),
-        },
-        compress: true,
-        port: 9000,
-        historyApiFallback: true,
-    },
+    devtool: 'inline-source-map',
     module: {
         rules: [
             {
@@ -32,7 +20,28 @@ module.exports = {
                 test: /\.(woff|woff2|eot|ttf|otf)$/i,
                 type: 'asset/resource',
             },
+            {
+                test: /\.tsx?$/,
+                use: 'ts-loader',
+                exclude: /node_modules/,
+            },
         ],
+    },
+    resolve: {
+        extensions: ['.tsx', '.ts', '.js'],
+    },
+    output: {
+        filename: 'app.js',
+        path: path.resolve(__dirname, 'dist'),
+        publicPath: '/'
+    },
+    devServer: {
+        static: {
+            directory: path.join(__dirname, 'public'),
+        },
+        compress: true,
+        port: 9000,
+        historyApiFallback: true,
     },
     plugins: [
         // new Dotenv(),

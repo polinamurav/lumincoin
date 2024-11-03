@@ -28,7 +28,7 @@ export class Auth {
         localStorage.removeItem(this.userInfoKey);
     }
 
-    static getAuthInfo(key = null) {
+    static getAuthInfo(key: string | null = null): string | { [key: string]: string | null} | null {
         if (key && [this.accessTokenKey, this.refreshTokenKey, this.userInfoKey].includes(key)) {
             return localStorage.getItem(key);
         } else {
@@ -67,33 +67,6 @@ export class Auth {
                 }
             }
         }
-    }
-
-    static async processUnauthorizedResponse() {
-        const refreshToken = localStorage.getItem(this.refreshTokenKey);
-        if (refreshToken) {
-            const response = await fetch(config.api + '/refresh', {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json',
-                    'Accept': 'application/json',
-                },
-                body: JSON.stringify({refreshToken: refreshToken})
-            });
-
-            if (response && response.status === 200) {
-                const result = await response.json();
-                if (result && !result.error) {
-                    this.setTokens(result.accessToken, result.refreshToken);
-                    return true;
-                }
-            }
-
-        }
-
-        this.removeTokens();
-        location.href = '#/';
-        return false;
     }
 
     static async updateRefreshToken() {

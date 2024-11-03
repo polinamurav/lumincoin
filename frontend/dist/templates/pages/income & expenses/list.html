@@ -3,44 +3,46 @@
         <h3 class="mb-5">Доходы и расходы</h3>
         <div class="row g-3 mb-4">
             <div class="col-12 col-md-3 col-xl-2">
-                <a href="/income&expenses/create" class="btn btn-success w-100">Создать доход</a>
+                <button data-type="income" class="btn btn-success w-100 create-button">Создать доход</button>
+<!--                <a href="#/income&expenses/create" id="incomeButton" class="btn btn-success w-100">Создать доход</a>-->
             </div>
             <div class="col-12 col-md-3 col-xl-2">
-                <a href="/income&expenses/create" class="btn btn-danger w-100">Создать расход</a>
+                <button data-type="expense" class="btn btn-danger w-100 create-button">Создать расход</button>
+<!--                <a href="#/income&expenses/create" id="expenseButton" class="btn btn-danger w-100">Создать расход</a>-->
             </div>
         </div>
         <div class="row g-3 pb-5">
             <div class="col-12 col-xl-2 col-lg-4 col-sm-6">
-                <button type="button" class="btn btn-secondary w-100">Сегодня</button>
+                <button type="button" class="btn border-secondary btn-secondary w-100" data-period="today">Сегодня</button>
             </div>
             <div class="col-12 col-xl-2 col-lg-4 col-sm-6">
-                <button type="button" class="btn border-secondary w-100">Неделя</button>
+                <button type="button" class="btn border-secondary w-100" data-period="week">Неделя</button>
             </div>
             <div class="col-12 col-xl-2 col-lg-4 col-sm-6">
-                <button type="button" class="btn border-secondary w-100">Месяц</button>
+                <button type="button" class="btn border-secondary w-100" data-period="month">Месяц</button>
             </div>
             <div class="col-12 col-xl-2 col-lg-4 col-sm-6">
-                <button type="button" class="btn border-secondary w-100">Год</button>
+                <button type="button" class="btn border-secondary w-100" data-period="year">Год</button>
             </div>
             <div class="col-12 col-xl-2 col-lg-4 col-sm-6">
-                <button type="button" class="btn border-secondary w-100">Все</button>
+                <button type="button" class="btn border-secondary w-100" data-period="all">Все</button>
             </div>
             <div class="col-12 col-xl-2 col-lg-4 col-sm-6">
-                <button type="button" class="btn border-secondary w-100">Интервал</button>
+                <button type="button" class="btn border-secondary w-100" data-period="interval">Интервал</button>
             </div>
             <div class="col-12 col-xl-2 col-lg-4 col-sm-6">
                 <div class="d-flex align-items-center">с
-                    <input type="date" class="input-date border-0 text-decoration-underline ms-2 me-2"
+                    <input type="date" name="dateFrom" class="input-date border-0 text-decoration-underline ms-2 me-2"
                            placeholder="Дата">
                     по
-                    <input type="date" class="input-date border-0 text-decoration-underline ms-2 ml-2"
+                    <input type="date" name="dateTo" class="input-date border-0 text-decoration-underline ms-2 ml-2"
                            placeholder="Дата">
                 </div>
             </div>
         </div>
 
         <div class="table-responsive">
-            <table class="table table-hover">
+            <table class="table table-hover" id="data-table">
                 <thead class="text-center">
                 <tr>
                     <th scope="col" class="text-dark">№ Операции</th>
@@ -52,7 +54,7 @@
                     <th scope="col"></th>
                 </tr>
                 </thead>
-                <tbody class="text-center">
+                <tbody class="text-center" id="records">
                 <tr>
                     <th scope="row">1</th>
                     <td class="text-success">доход</td>
@@ -61,9 +63,9 @@
                     <td>11.09.2022</td>
                     <td></td>
                     <td>
-                        <a href="/income&expenses/delete" data-toggle="modal" data-target="#delete"
+                        <a href="#/income&expenses/delete" data-toggle="modal" data-target="#delete"
                            class="btn border-0 p-0 me-2"><i class="bi bi-trash me-2"></i></a>
-                        <a href="/income&expenses/edit" class="btn border-0 p-0"><i class="bi bi-pencil"></i></a>
+                        <a href="#/income&expenses/edit" class="btn border-0 p-0"><i class="bi bi-pencil"></i></a>
                     </td>
                 </tr>
                 <tr>
@@ -76,7 +78,7 @@
                     <td>
                         <button type="button" data-bs-toggle="modal" data-bs-target="#dateRangeModal"
                                 class="btn border-0 p-0 me-2"><i class="bi bi-trash me-2"></i></button>
-                        <a href="/income&expenses/edit" class="btn border-0 p-0"><i class="bi bi-pencil"></i></a>
+                        <a href="#/income&expenses/edit" class="btn border-0 p-0"><i class="bi bi-pencil"></i></a>
                     </td>
                 </tr>
                 </tbody>
@@ -95,7 +97,7 @@
                 <h5 class="mt3 text-center">Вы действительно хотите удалить операцию?</h5>
             </div>
             <div class="modal-footer pb-4 border-0 justify-content-center">
-                <a href="/income&expenses/delete" class="btn btn-success">Да, удалить</a>
+                <a href="#/income&expenses/delete" class="btn btn-success">Да, удалить</a>
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Не удалять</button>
             </div>
         </div>

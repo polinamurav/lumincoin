@@ -14,11 +14,21 @@ import {ExpenseEdit} from "./components/category/expense/expense-edit";
 import {ExpenseDelete} from "./components/category/expense/expense-delete";
 import {IncomeExpenseDelete} from "./components/income & expenses/income&Expense-delete";
 import {BalanceService} from "./components/services/balance-service";
+import {RouteType} from "./types/route.type";
+import {BalanceType} from "./types/balance.type";
+import {UserInfoType} from "./types/user-info.type";
 
 export class Router {
+    readonly titlePageElement: HTMLElement | null;
+    readonly contentPageElement: HTMLElement | null;
+    private profileNameElement: HTMLElement | null;
+    private routes: RouteType [];
+    private userName: string | null;
+
     constructor() {
         this.titlePageElement = document.getElementById('title');
         this.contentPageElement = document.getElementById('content');
+        this.userName = null;
 
         this.initEvents();
 
@@ -64,6 +74,7 @@ export class Router {
             },
             {
                 route: '#/logout',
+                title: 'Выход',
             },
             {
                 route: '#/income',
@@ -94,6 +105,7 @@ export class Router {
             },
             {
                 route: '#/income/delete',
+                title: 'Удалить',
                 load: () => {
                     new IncomeDelete();
                 },
@@ -127,6 +139,7 @@ export class Router {
             },
             {
                 route: '#/expense/delete',
+                title: 'Удалить',
                 load: () => {
                     new ExpenseDelete();
                 },
@@ -160,6 +173,7 @@ export class Router {
             },
             {
                 route: '#/income&expenses/delete',
+                title: 'Удалить',
                 load: () => {
                     new IncomeExpenseDelete();
                 },
@@ -167,93 +181,111 @@ export class Router {
         ]
     }
 
-    initEvents() {
+    private initEvents(): void {
         window.addEventListener('DOMContentLoaded', this.activateRoute.bind(this));
         window.addEventListener('popstate', this.activateRoute.bind(this));
     }
 
-    async activateRoute() {
-        const urlRoute = window.location.hash.split('?')[0];
-        const newRoute = this.routes.find(item => item.route === urlRoute);
+    private async activateRoute(): Promise<void> {
+        const urlRoute: string = window.location.hash.split('?')[0];
+        const newRoute: RouteType | undefined = this.routes.find(item => item.route === urlRoute);
 
         if (urlRoute === '#/logout') {
             await Auth.logout();
             location.href = '#/login';
-            return false;
+            return;
         }
 
-        if (newRoute) {
-            if (urlRoute !== '#/login' && urlRoute !== '#/sign-up') {
-                const accessTokenKey = localStorage.getItem(Auth.accessTokenKey);
-                if (!accessTokenKey) {
-                    window.location.href = '#/login';
-                    return;
-                }
-            }
+        if (!newRoute) {
+            window.location.href = '#/login';
+            return;
+        }
 
-            if (newRoute.title) {
+        if (urlRoute !== '#/login' && urlRoute !== '#/sign-up') {
+            const accessTokenKey: string | null = localStorage.getItem(Auth.accessTokenKey);
+            if (!accessTokenKey) {
+                window.location.href = '#/login';
+                return;
+            }
+        }
+
+        if (newRoute.title) {
+            if (this.titlePageElement) {
                 this.titlePageElement.innerText = newRoute.title;
             }
+        }
 
-            if (newRoute.filePathTemplate) {
-                document.body.className = '';
-                let contentBlock = this.contentPageElement;
+        if (newRoute.filePathTemplate) {
+            document.body.className = '';
+            let contentBlock: HTMLElement | null = this.contentPageElement;
+            if (contentBlock) {
                 if (newRoute.useLayout) {
-                    this.contentPageElement.innerHTML = await fetch(newRoute.useLayout).then(response => response.text());
+                    if (this.contentPageElement) {
+                        this.contentPageElement.innerHTML = await fetch(newRoute.useLayout).then((response: Response) => response.text());
+                    }
                     contentBlock = document.getElementById('content-layout');
                 }
-                contentBlock.innerHTML = await fetch(newRoute.filePathTemplate).then(response => response.text());
-                await this.getBalance();
+                if (contentBlock) {
+                    contentBlock.innerHTML = await fetch(newRoute.filePathTemplate).then((response: Response) => response.text());
+                }
+            }
+            await this.getBalance();
 
-                this.profileNameElement = document.getElementById('user-name');
-                if (!this.userName) {
-                    let userInfo = Auth.getAuthInfo(Auth.userInfoKey);
-                    if (userInfo) {
-                        userInfo = JSON.parse(userInfo);
-                        if (userInfo.fullName) {
-                            this.userName = userInfo.fullName;
-                        }
+            this.profileNameElement = document.getElementById('user-name');
+            if (!this.userName) {
+                let userInfoStr: string | null = Auth.getAuthInfo(Auth.userInfoKey) as string | null;
+                if (userInfoStr) {
+                    const userInfo: UserInfoType = JSON.parse(userInfoStr);
+                    if (userInfo.fullName) {
+                        this.userName = userInfo.fullName;
                     }
                 }
-                if (this.profileNameElement) {
+            }
+
+            if (this.profileNameElement) {
+                if (typeof this.userName === "string") {
                     this.profileNameElement.innerText = this.userName;
                 }
-                this.activateMenuItem(newRoute);
             }
-
-            if (newRoute.load && typeof newRoute.load === 'function') {
-                newRoute.load();
-            }
-        } else {
-            window.location.href = '#/login';
+            this.activateMenuItem(newRoute);
         }
+
+        if (newRoute.load && typeof newRoute.load === 'function') {
+            newRoute.load();
+        }
+
     }
 
-    async getBalance() {
-        const response = await BalanceService.getBalance();
+    private async getBalance(): Promise<void> {
+        const response: BalanceType = await BalanceService.getBalance();
 
         if (!response) {
-            alert(response);
-            return window.location.href = '#/';
+            alert("Баланс не получен");
+            window.location.href = '#/';
+            return;
         }
 
-        document.getElementById('balance').innerText = response.balance + '$' || 0;
-        const balancePhone = document.getElementById('balance2');
+        const balanceElement: HTMLElement | null = document.getElementById('balance');
+        if (balanceElement) {
+            balanceElement.innerText = response.balance ? response.balance + '$' : '0$';
+        }
+
+        const balancePhone: HTMLElement | null = document.getElementById('balance2');
         if (balancePhone) {
-            balancePhone.innerText = response.balance + '$' || 0;
+            balancePhone.innerText = response.balance + '$' || '0$';
         }
     }
 
-    activateMenuItem(route) {
-        let openedDropdown = null;
+    private activateMenuItem(route: RouteType): void {
+        let openedDropdown: HTMLElement | null = null;
 
-        document.querySelectorAll('.nav-link').forEach(item => {
-            const href = item.getAttribute('href');
+        document.querySelectorAll('.nav-link').forEach((item: HTMLElement) => {
+            const href: string | null = item.getAttribute('href');
             if ((route.route.startsWith(href) && href !== '#/') || (route.route === '#/' && href === '#/')) {
                 item.classList.add('active');
                 item.classList.remove('link-dark');
                 if (href === '#/income' || href === '#/expense') {
-                    const dropdownMenu = item.closest('.dropdown').querySelector('.dropdown-menu');
+                    const dropdownMenu: HTMLElement | null = item.closest('.dropdown').querySelector('.dropdown-menu');
                     if (dropdownMenu) {
                         dropdownMenu.classList.add('show');
                         openedDropdown = dropdownMenu;
@@ -263,7 +295,7 @@ export class Router {
                 item.classList.remove('active');
                 item.classList.add('link-dark');
                 if (href === '#/income' || href === '#/expense') {
-                    const dropdownMenu = item.closest('.dropdown').querySelector('.dropdown-menu');
+                    const dropdownMenu: HTMLElement | null = item.closest('.dropdown').querySelector('.dropdown-menu');
                     if (dropdownMenu && openedDropdown !== dropdownMenu) {
                         dropdownMenu.classList.remove('show');
                     }
