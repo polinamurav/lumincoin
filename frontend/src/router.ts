@@ -1,9 +1,7 @@
-import {Main} from "./components/main.js";
-import {IncomeExpensesEdit} from "./components/income & expenses/income&Expenses-edit.js";
-import {Form} from "./components/auth/form.js";
+import {Main} from "./components/main";
+import {IncomeExpensesEdit} from "./components/income & expenses/income&Expenses-edit";
+import {Form} from "./components/auth/form";
 import {Auth} from "./components/services/auth";
-import {CustomHttp, CustomHttp as HttpUtils} from "./components/services/custom-http";
-import config from "./config/config";
 import {IncomeExpensesList} from "./components/income & expenses/income&Expenses-list";
 import {IncomeExpensesCreate} from "./components/income & expenses/income&Expenses-create";
 import {IncomeList} from "./components/category/income/income-list";
@@ -15,7 +13,6 @@ import {ExpenseCreate} from "./components/category/expense/expense-create";
 import {ExpenseEdit} from "./components/category/expense/expense-edit";
 import {ExpenseDelete} from "./components/category/expense/expense-delete";
 import {IncomeExpenseDelete} from "./components/income & expenses/income&Expense-delete";
-import {ExpenseService} from "./components/services/expense-service";
 import {BalanceService} from "./components/services/balance-service";
 
 export class Router {
