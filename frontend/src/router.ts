@@ -18,6 +18,7 @@ import {RouteType} from "./types/route.type";
 import {BalanceType} from "./types/balance.type";
 import {UserInfoType} from "./types/user-info.type";
 
+//done
 export class Router {
     readonly titlePageElement: HTMLElement | null;
     readonly contentPageElement: HTMLElement | null;

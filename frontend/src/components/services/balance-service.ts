@@ -1,10 +1,12 @@
 import {CustomHttp as HttpUtils} from "./custom-http";
 import config from "../../config/config";
+import {BalanceType} from "../../types/balance.type";
 
+//done
 export class BalanceService {
-    static async getBalance() {
+    public static async getBalance(): Promise<BalanceType> {
         try {
-            const result = await HttpUtils.request(config.api + '/balance');
+            const result: BalanceType = await HttpUtils.request(config.api + '/balance');
             console.log(result);
 
             return result;

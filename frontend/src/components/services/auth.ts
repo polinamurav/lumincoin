@@ -4,6 +4,7 @@ import {LogoutResponseType} from "../../types/logout-response.type";
 import {RefreshResponseType} from "../../types/refresh-response.type";
 import {AuthInfoType} from "../../types/auth-info.type";
 
+//done
 export class Auth {
     public static accessTokenKey: string = 'accessToken';
     private static refreshTokenKey: string = 'refreshToken';
