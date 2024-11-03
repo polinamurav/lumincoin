@@ -1,9 +1,10 @@
 import {UrlUtils} from "../services/url-utils";
 import {IncomeExpensesService} from "../services/income&expenses-service";
 
+//done
 export class IncomeExpenseDelete {
     constructor() {
-        const id = UrlUtils.getUrlParam('id');
+        const id: string | null = UrlUtils.getUrlParam('id');
         if (!id) {
             window.location.href = '/#';
         }
@@ -11,14 +12,14 @@ export class IncomeExpenseDelete {
         this.deleteIncomeExpense(id).then();
     }
 
-    async deleteIncomeExpense(id) {
-        const response = await IncomeExpensesService.deleteIncomeExpense(id);
+    async deleteIncomeExpense(id): Promise<void>  {
+        const response: boolean = await IncomeExpensesService.deleteIncomeExpense(id);
 
         if (!response) {
             alert("Произошла ошибка");
-            return window.location.href = '#/';
+            window.location.href = '#/';
         }
 
-        return window.location.href = '#/income&expenses';
+        window.location.href = '#/income&expenses';
     }
 }
