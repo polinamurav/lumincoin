@@ -1,4 +1,4 @@
 export type CategoryExpenseType = {
-    id: number;
+    id?: number;
     title: string;
 }
