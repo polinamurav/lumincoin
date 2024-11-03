@@ -6,7 +6,7 @@ import {IncomeExpenseCreateType} from "../../types/income-expense-create.type";
 
 //done
 export class IncomeExpensesService {
-    public static async getIncomeExpenses(period: string = 'all'): Promise<IncomeExpenseType[]> {
+    public static async getIncomeExpenses(period: string = 'all'): Promise<IncomeExpenseType[] | void> {
         try {
             const result: IncomeExpenseType[] = await HttpUtils.request(config.api + '/operations?period=' + period);
 
@@ -23,7 +23,7 @@ export class IncomeExpensesService {
         }
     }
 
-    public static async getIncomeExpense(id: number): Promise<IncomeExpenseType> {
+    public static async getIncomeExpense(id: number): Promise<IncomeExpenseType | void> {
         try {
             const result: IncomeExpenseType | DefaultResponseType = await HttpUtils.request(config.api + '/operations/' + id);
 
@@ -44,7 +44,7 @@ export class IncomeExpensesService {
         }
     }
 
-    public static async createIncomeExpenses(data: IncomeExpenseCreateType): Promise<IncomeExpenseCreateType> {
+    public static async createIncomeExpenses(data: IncomeExpenseCreateType): Promise<IncomeExpenseCreateType | void> {
         try {
             const result: IncomeExpenseCreateType | DefaultResponseType = await HttpUtils.request(config.api + '/operations', 'POST', data);
 
@@ -65,7 +65,7 @@ export class IncomeExpensesService {
         }
     }
 
-    public static async updateIncomeExpense(id: number, data): Promise<IncomeExpenseCreateType> {
+    public static async updateIncomeExpense(id: number, data: IncomeExpenseCreateType): Promise<IncomeExpenseCreateType | void> {
         try {
             const result: IncomeExpenseCreateType | DefaultResponseType = await HttpUtils.request(config.api + '/operations/' + id, 'PUT', data);
 

@@ -2,7 +2,7 @@ export type RefreshResponseType = {
     error: boolean,
     message: string,
     tokens?: {
-        accessToken,
-        refreshToken,
+        accessToken: string,
+        refreshToken: string,
     },
 }

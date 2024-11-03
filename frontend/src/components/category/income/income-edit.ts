@@ -68,7 +68,7 @@ export class IncomeEdit {
             if (Object.keys(changedData).length > 0) {
                 const incomeId: number | undefined = this.incomeOriginalData.id;
                 if (incomeId !== undefined) {
-                    const response: CategoryIncomeType = await ExpenseService.updateExpense(incomeId, changedData);
+                    const response: CategoryIncomeType = await IncomeService.updateIncome(incomeId, changedData);
 
                     if (!response) {
                         alert("Произошла ошибка");

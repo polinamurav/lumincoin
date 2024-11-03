@@ -5,7 +5,7 @@ import {DefaultResponseType} from "../../types/default-response.type";
 
 //done
 export class ExpenseService {
-    public static async getExpenses(): Promise<CategoryExpenseType[]> {
+    public static async getExpenses(): Promise<CategoryExpenseType[] | void> {
         try {
             const result: CategoryExpenseType[] = await HttpUtils.request(config.api + '/categories/expense');
 
@@ -22,7 +22,7 @@ export class ExpenseService {
         }
     }
 
-    public static async getExpense(id: number): Promise<CategoryExpenseType> {
+    public static async getExpense(id: number): Promise<CategoryExpenseType | void> {
         try {
             const result: CategoryExpenseType | DefaultResponseType = await HttpUtils.request(config.api + '/categories/expense/' + id);
 
@@ -43,7 +43,7 @@ export class ExpenseService {
         }
     }
 
-    public static async createExpense(data: CategoryExpenseType): Promise<CategoryExpenseType> {
+    public static async createExpense(data: CategoryExpenseType): Promise<CategoryExpenseType | void> {
         try {
             const result: CategoryExpenseType | DefaultResponseType = await HttpUtils.request(config.api + '/categories/expense', 'POST', data);
 
@@ -64,7 +64,7 @@ export class ExpenseService {
         }
     }
 
-    public static async updateExpense(id: number, data): Promise<CategoryExpenseType> {
+    public static async updateExpense(id: number, data: CategoryExpenseType): Promise<CategoryExpenseType | void> {
         try {
             const result: CategoryExpenseType | DefaultResponseType = await HttpUtils.request(config.api + '/categories/expense/' + id, 'PUT', data);
 

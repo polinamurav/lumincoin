@@ -5,7 +5,7 @@ import {DefaultResponseType} from "../../types/default-response.type";
 
 //done
 export class IncomeService {
-    public static async getIncomes(): Promise<CategoryIncomeType[]> {
+    public static async getIncomes(): Promise<CategoryIncomeType[] | void> {
         try {
             const result: CategoryIncomeType[] = await HttpUtils.request(config.api + '/categories/income');
 
@@ -22,7 +22,7 @@ export class IncomeService {
         }
     }
 
-    public static async getIncome(id: number): Promise<CategoryIncomeType> {
+    public static async getIncome(id: number): Promise<CategoryIncomeType | void> {
         try {
             const result: CategoryIncomeType | DefaultResponseType = await HttpUtils.request(config.api + '/categories/income/' + id);
 
@@ -43,7 +43,7 @@ export class IncomeService {
         }
     }
 
-    public static async createIncome(data: CategoryIncomeType): Promise<CategoryIncomeType> {
+    public static async createIncome(data: CategoryIncomeType): Promise<CategoryIncomeType | void> {
         try {
             const result: CategoryIncomeType | DefaultResponseType = await HttpUtils.request(config.api + '/categories/income', 'POST', data);
 
@@ -81,7 +81,7 @@ export class IncomeService {
         }
     }
 
-    public static async updateIncome(id: number, data): Promise<CategoryIncomeType> {
+    public static async updateIncome(id: number, data: CategoryIncomeType): Promise<CategoryIncomeType | void> {
         try {
             const result: CategoryIncomeType | DefaultResponseType = await HttpUtils.request(config.api + '/categories/income/' + id, 'PUT', data);
 

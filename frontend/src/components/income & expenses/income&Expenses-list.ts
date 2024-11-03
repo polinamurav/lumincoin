@@ -11,54 +11,75 @@ export class IncomeExpensesList {
     }
 
     private buttonFilters(): void {
-        document.querySelector('button[data-period="today"]').addEventListener('click', () => {
-            this.getIncomeExpenses('today');
-            this.activeButton('today');
-        });
+        const todayButton: HTMLButtonElement = document.querySelector<HTMLButtonElement>('button[data-period="today"]');
+        const allButton: HTMLButtonElement  = document.querySelector<HTMLButtonElement>('button[data-period="all"]');
+        const weekButton: HTMLButtonElement  = document.querySelector<HTMLButtonElement>('button[data-period="week"]');
+        const monthButton: HTMLButtonElement  = document.querySelector<HTMLButtonElement>('button[data-period="month"]');
+        const yearButton: HTMLButtonElement  = document.querySelector<HTMLButtonElement>('button[data-period="year"]');
+        const fromDateInput: HTMLInputElement  = document.querySelector<HTMLInputElement>('input[name="dateFrom"]');
+        const toDateInput: HTMLInputElement  = document.querySelector<HTMLInputElement>('input[name="dateTo"]');
+        const intervalButton: HTMLButtonElement  = document.querySelector<HTMLButtonElement>('button[data-period="interval"]');
 
-        document.querySelector('button[data-period="all"]').addEventListener('click', () => {
-            this.getIncomeExpenses('all');
-            this.activeButton('all');
-        });
+        if (todayButton) {
+            todayButton.addEventListener('click', () => {
+                this.getIncomeExpenses('today');
+                this.activeButton('today');
+            });
+        }
 
-        document.querySelector('button[data-period="week"]').addEventListener('click', () => {
-            this.getIncomeExpenses('week');
-            this.activeButton('week');
-        });
-        document.querySelector('button[data-period="month"]').addEventListener('click', () => {
-            this.getIncomeExpenses('month');
-            this.activeButton('month');
-        });
-        document.querySelector('button[data-period="year"]').addEventListener('click', () => {
-            this.getIncomeExpenses('year');
-            this.activeButton('year');
-        });
+        if (allButton) {
+            allButton.addEventListener('click', () => {
+                this.getIncomeExpenses('all');
+                this.activeButton('all');
+            });
+        }
 
-        const fromDateInput: HTMLInputElement | null = document.querySelector('input[name="dateFrom"]');
-        const toDateInput: HTMLInputElement | null = document.querySelector('input[name="dateTo"]');
-        document.querySelector('button[data-period="interval"]').addEventListener('click', () => {
-            const dateFrom = (fromDateInput as HTMLInputElement).value || 'null';
-            const dateTo = (toDateInput as HTMLInputElement).value || 'null';
-            this.getIncomeExpenses('interval&dateFrom=' + dateFrom + '&dateTo=' + dateTo);
-            this.activeButton('interval');
-        });
+        if (weekButton) {
+            weekButton.addEventListener('click', () => {
+                this.getIncomeExpenses('week');
+                this.activeButton('week');
+            });
+        }
+
+        if (monthButton) {
+            monthButton.addEventListener('click', () => {
+                this.getIncomeExpenses('month');
+                this.activeButton('month');
+            });
+        }
+
+        if (yearButton) {
+            yearButton.addEventListener('click', () => {
+                this.getIncomeExpenses('year');
+                this.activeButton('year');
+            });
+        }
+
+        if (intervalButton) {
+            intervalButton.addEventListener('click', () => {
+                const dateFrom: string = fromDateInput ? fromDateInput.value : 'null';
+                const dateTo: string = toDateInput ? toDateInput.value : 'null';
+                this.getIncomeExpenses(`interval&dateFrom=${dateFrom}&dateTo=${dateTo}`);
+                this.activeButton('interval');
+            });
+        }
     }
 
     private createButtons(): void {
         document.querySelectorAll('.create-button').forEach(button => {
             button.addEventListener('click', (e: Event): void => {
-                const target = e.currentTarget as HTMLElement;
-                const type: string = target.getAttribute('data-type');
+                const target: HTMLElement | null = e.currentTarget as HTMLElement;
+                const type: string | null = target.getAttribute('data-type');
                 this.createOperation(type, '#/income&expenses/create');
             })
         })
     }
 
-    private createOperation(type, link): void {
+    private createOperation(type: string, link: string): void {
         window.location.href = `${link}?type=${type}`;
     }
 
-    private activeButton(period): void {
+    private activeButton(period: string): void {
         const buttons: NodeListOf<Element> = document.querySelectorAll('button[data-period]');
         buttons.forEach(button => {
             button.classList.remove('btn-secondary');
@@ -71,7 +92,7 @@ export class IncomeExpensesList {
     }
 
     private async getIncomeExpenses(period: string = 'all'): Promise<void> {
-        const response: IncomeExpenseType[] = await IncomeExpensesService.getIncomeExpenses(period);
+        const response: IncomeExpenseType[] | void = await IncomeExpensesService.getIncomeExpenses(period);
 
         if (!response) {
             alert('Произошла ошибка');
@@ -79,7 +100,7 @@ export class IncomeExpensesList {
             return;
         }
 
-        this.showRecords(response);
+        this.showRecords(response as IncomeExpenseType);
     }
 
     private showRecords(incomeExpenses): void {
@@ -114,8 +135,10 @@ export class IncomeExpensesList {
             deleteButton.innerHTML = '<i class="bi bi-trash me-2"></i>';
 
             deleteButton.addEventListener('click', () => {
-                const deleteLink: Element = document.querySelector('#dateRangeModal a[href="#/income&expenses/delete"]');
-                deleteLink.setAttribute('href', `#/income&expenses/delete?id=${incomeExpenses[i].id}`);
+                const deleteLink: HTMLElement | null = document.querySelector('#dateRangeModal a[href="#/income&expenses/delete"]');
+                if (deleteLink){
+                    deleteLink.setAttribute('href', `#/income&expenses/delete?id=${incomeExpenses[i].id}`);
+                }
             });
 
             const editLink: HTMLAnchorElement = document.createElement('a');
@@ -133,8 +156,10 @@ export class IncomeExpensesList {
         const deleteModal: HTMLElement | null = document.getElementById('dateRangeModal');
         if (deleteModal) {
             deleteModal.addEventListener('hidden.bs.modal', () => {
-                const deleteLink = document.querySelector('#dateRangeModal a[href^="#/income&expenses/delete"]');
-                deleteLink.setAttribute('href', '#/income&expenses/delete');
+                const deleteLink: HTMLElement | null = document.querySelector('#dateRangeModal a[href^="#/income&expenses/delete"]');
+                if (deleteLink) {
+                    deleteLink.setAttribute('href', '#/income&expenses/delete');
+                }
             });
         }
     }
