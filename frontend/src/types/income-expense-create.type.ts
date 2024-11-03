@@ -4,4 +4,5 @@ export type IncomeExpenseCreateType = {
     date: string
     comment: string
     category_id: number,
+    category?: string
 };

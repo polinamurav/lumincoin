@@ -2,18 +2,30 @@ import {UrlUtils} from "../services/url-utils";
 import {ExpenseService} from "../services/expense-service";
 import {IncomeExpensesService} from "../services/income&expenses-service";
 import {IncomeService} from "../services/income-service";
+import {IncomeExpenseType} from "../../types/income-expense.type";
+import {CategoryExpenseType} from "../../types/category-expense.type";
+import {CategoryIncomeType} from "../../types/category-income.type";
+import {IncomeExpenseCreateType} from "../../types/income-expense-create.type";
 
+//error
 export class IncomeExpensesEdit {
+    readonly typeInputElement: HTMLInputElement | null;
+    readonly categoryInputElement: HTMLInputElement | null;
+    readonly amountInputElement: HTMLInputElement | null;
+    readonly dateInputElement: HTMLInputElement | null;
+    readonly commentInputElement: HTMLInputElement | null;
+    private incomeExpenseOriginalData: IncomeExpenseCreateType | null;
+
     constructor() {
         document.getElementById('updateButton').addEventListener('click', this.updateIncomeExpense.bind(this));
 
-        this.typeInputElement = document.getElementById('typeInput');
-        this.categoryInputElement = document.getElementById('categoryInput');
-        this.amountInputElement = document.getElementById('amountInput');
-        this.dateInputElement = document.getElementById('dateInput');
-        this.commentInputElement = document.getElementById('commentInput');
+        this.typeInputElement = document.getElementById('typeInput') as HTMLInputElement;
+        this.categoryInputElement = document.getElementById('categoryInput') as HTMLInputElement;
+        this.amountInputElement = document.getElementById('amountInput') as HTMLInputElement;
+        this.dateInputElement = document.getElementById('dateInput') as HTMLInputElement;
+        this.commentInputElement = document.getElementById('commentInput') as HTMLInputElement;
 
-        const id = UrlUtils.getUrlParam('id');
+        const id: string | null = UrlUtils.getUrlParam('id');
         if (!id) {
             window.location.href = '/#';
         }
@@ -21,36 +33,39 @@ export class IncomeExpensesEdit {
         this.getIncomeExpense(id).then();
     }
 
-    validateForm() {
-        let isValid = true;
-        let textInputArray = [this.typeInputElement, this.categoryInputElement, this.amountInputElement,
+    private validateForm(): boolean {
+        let isValid: boolean = true;
+        let textInputArray: (HTMLInputElement | null)[] = [this.typeInputElement, this.categoryInputElement, this.amountInputElement,
             this.dateInputElement, this.commentInputElement];
-        for (let i = 0; i < textInputArray.length; i++) {
-            if (textInputArray[i].value) {
-                textInputArray[i].classList.remove('is-invalid');
-            } else {
-                textInputArray[i].classList.add('is-invalid');
-                isValid = false;
+        for (let i: number = 0; i < textInputArray.length; i++) {
+            const inputElement: HTMLInputElement | null = textInputArray[i];
+            if (inputElement) {
+                if (inputElement.value) {
+                    inputElement.classList.remove('is-invalid');
+                } else {
+                    inputElement.classList.add('is-invalid');
+                    isValid = false;
+                }
             }
         }
         return isValid;
     }
 
-    async getIncomeExpense(id) {
-        const response = await IncomeExpensesService.getIncomeExpense(id);
+    private async getIncomeExpense(id): Promise<void> {
+        const response: IncomeExpenseType = await IncomeExpensesService.getIncomeExpense(id);
 
         if (!response) {
             alert("Произошла ошибка");
             window.location.href = '/#';
+            return;
         }
 
         this.incomeExpenseOriginalData = response;
         this.showIncomeExpenses(response);
     }
 
-    showIncomeExpenses(incomeExpense) {
+    private showIncomeExpenses(incomeExpense: IncomeExpenseType): void {
         this.typeInputElement.value = incomeExpense.type;
-        // this.categoryInputElement.textContent = incomeExpense.category;
         this.amountInputElement.value = incomeExpense.amount;
         this.dateInputElement.value = incomeExpense.date;
         this.commentInputElement.value = incomeExpense.comment;
@@ -61,53 +76,63 @@ export class IncomeExpensesEdit {
         }
     }
 
-    async getIncomes() {
-        const response = await IncomeService.getIncomes();
+    private async getIncomes(): Promise<void> {
+        const response: CategoryIncomeType[] = await IncomeService.getIncomes();
 
         if (!response) {
             alert(response);
-            return window.location.href = '#/';
+            window.location.href = '#/';
+            return;
         }
 
         this.showOptions(response);
     }
 
-    async getExpenses() {
-        const response = await ExpenseService.getExpenses();
+    private async getExpenses(): Promise<void> {
+        const response: CategoryExpenseType[] = await ExpenseService.getExpenses();
 
         if (!response) {
             alert(response);
-            return window.location.href = '#/';
+            window.location.href = '#/';
+            return;
         }
 
         this.showOptions(response);
     }
 
-    showOptions(result) {
-        this.categoryInputElement.innerHTML = '';
+    private showOptions(result): void {
+        if (this.categoryInputElement) {
+            this.categoryInputElement.innerHTML = '';
+        }
 
-        const currentCategory = result.find(cat => cat.title === this.incomeExpenseOriginalData.category);
+        const currentCategory: IncomeExpenseCreateType = result.find(cat => cat.title === this.incomeExpenseOriginalData.category);
         if (currentCategory) {
-            const optionElement = document.createElement('option');
+            const optionElement: HTMLOptionElement | null = document.createElement('option');
             optionElement.value = currentCategory.id;
             optionElement.textContent = currentCategory.title;
-            this.categoryInputElement.appendChild(optionElement);
+            if (this.categoryInputElement) {
+                this.categoryInputElement.appendChild(optionElement);
+            }
 
             //обновляем список с уже id
             this.incomeExpenseOriginalData.category_id = currentCategory.id;
         }
 
-        for (let i = 0; i < result.length; i++) {
+        for (let i: number = 0; i < result.length; i++) {
             if (result[i].id !== this.incomeExpenseOriginalData.category_id) {
-                const optionElement = document.createElement('option');
-                optionElement.value = result[i].id;
+                const optionElement: HTMLOptionElement = document.createElement('option');
+                optionElement.value = result[i].id.toString();
                 optionElement.textContent = result[i].title;
-                this.categoryInputElement.appendChild(optionElement);
+
+                if (this.categoryInputElement) {
+                    this.categoryInputElement.appendChild(optionElement);
+                }
             }
         }
+
     }
 
-    async updateIncomeExpense(e) {
+    private async updateIncomeExpense(e: MouseEvent): Promise<void> {
         e.preventDefault();
 
         if (this.validateForm()) {
@@ -126,15 +151,14 @@ export class IncomeExpensesEdit {
             if (this.commentInputElement.value !== this.incomeExpenseOriginalData.comment) {
                 this.incomeExpenseOriginalData.comment = this.commentInputElement.value;
             }
-                const response = await IncomeExpensesService.updateIncomeExpense(this.incomeExpenseOriginalData.id, this.incomeExpenseOriginalData);
+            const response: IncomeExpenseCreateType = await IncomeExpensesService.updateIncomeExpense(this.incomeExpenseOriginalData.id, this.incomeExpenseOriginalData);
 
-                if (!response) {
-                    alert("Произошла ошибка");
-                }
+            if (!response) {
+                alert("Произошла ошибка");
+            }
 
-                return window.location.href = '#/income&expenses';
-
+            window.location.href = '#/income&expenses';
         }
-        return window.location.href = '#/income&expenses';
+        window.location.href = '#/income&expenses';
     }
 }

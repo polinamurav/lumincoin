@@ -65,9 +65,9 @@ export class IncomeExpensesService {
         }
     }
 
-    public static async updateIncomeExpense(id: number, data): Promise<IncomeExpenseType> {
+    public static async updateIncomeExpense(id: number, data): Promise<IncomeExpenseCreateType> {
         try {
-            const result: IncomeExpenseType | DefaultResponseType = await HttpUtils.request(config.api + '/operations/' + id, 'PUT', data);
+            const result: IncomeExpenseCreateType | DefaultResponseType = await HttpUtils.request(config.api + '/operations/' + id, 'PUT', data);
 
             if (!result) {
                 alert ('Данные операций отсутствуют или некорректны.');
@@ -79,7 +79,7 @@ export class IncomeExpensesService {
                 throw new Error((result as DefaultResponseType).message);
             }
 
-            return result as IncomeExpenseType;
+            return result as IncomeExpenseCreateType;
         } catch (error) {
             console.error('Ошибка при получении данных:', error);
             return;
