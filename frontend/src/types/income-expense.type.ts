@@ -3,5 +3,6 @@ export type IncomeExpenseType = {
     type: string,
     amount: number,
     date: string
-    comment: string
+    comment: string,
+    category?: string
 };

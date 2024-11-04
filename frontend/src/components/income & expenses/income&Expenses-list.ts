@@ -11,14 +11,14 @@ export class IncomeExpensesList {
     }
 
     private buttonFilters(): void {
-        const todayButton: HTMLButtonElement = document.querySelector<HTMLButtonElement>('button[data-period="today"]');
-        const allButton: HTMLButtonElement  = document.querySelector<HTMLButtonElement>('button[data-period="all"]');
-        const weekButton: HTMLButtonElement  = document.querySelector<HTMLButtonElement>('button[data-period="week"]');
-        const monthButton: HTMLButtonElement  = document.querySelector<HTMLButtonElement>('button[data-period="month"]');
-        const yearButton: HTMLButtonElement  = document.querySelector<HTMLButtonElement>('button[data-period="year"]');
+        const todayButton: HTMLButtonElement | null = document.querySelector<HTMLButtonElement>('button[data-period="today"]');
+        const allButton: HTMLButtonElement | null  = document.querySelector<HTMLButtonElement>('button[data-period="all"]');
+        const weekButton: HTMLButtonElement | null  = document.querySelector<HTMLButtonElement>('button[data-period="week"]');
+        const monthButton: HTMLButtonElement | null  = document.querySelector<HTMLButtonElement>('button[data-period="month"]');
+        const yearButton: HTMLButtonElement | null  = document.querySelector<HTMLButtonElement>('button[data-period="year"]');
         const fromDateInput: HTMLInputElement | null  = document.querySelector<HTMLInputElement>('input[name="dateFrom"]');
         const toDateInput: HTMLInputElement | null  = document.querySelector<HTMLInputElement>('input[name="dateTo"]');
-        const intervalButton: HTMLButtonElement  = document.querySelector<HTMLButtonElement>('button[data-period="interval"]');
+        const intervalButton: HTMLButtonElement | null  = document.querySelector<HTMLButtonElement>('button[data-period="interval"]');
 
         if (todayButton) {
             todayButton.addEventListener('click', () => {
@@ -70,7 +70,9 @@ export class IncomeExpensesList {
             button.addEventListener('click', (e: Event): void => {
                 const target: HTMLElement | null = e.currentTarget as HTMLElement;
                 const type: string | null = target.getAttribute('data-type');
-                this.createOperation(type, '#/income&expenses/create');
+                if (type) {
+                    this.createOperation(type, '#/income&expenses/create');
+                }
             })
         })
     }
@@ -100,10 +102,10 @@ export class IncomeExpensesList {
             return;
         }
 
-        this.showRecords(response as IncomeExpenseType);
+        this.showRecords(response as IncomeExpenseType[]);
     }
 
-    private showRecords(incomeExpenses): void {
+    private showRecords(incomeExpenses: IncomeExpenseType[]): void {
         const recordsElement: HTMLElement | null = document.getElementById('records');
         if (recordsElement) {
             recordsElement.innerHTML = '';
@@ -122,7 +124,7 @@ export class IncomeExpensesList {
                 typeCell.className = 'text-success';
             }
             trElement.insertCell().innerText = incomeExpenses[i].category;
-            trElement.insertCell().innerText = incomeExpenses[i].amount;
+            trElement.insertCell().innerText = incomeExpenses[i].amount.toString();
             trElement.insertCell().innerText = incomeExpenses[i].date;
             trElement.insertCell().innerText = incomeExpenses[i].comment;
 
