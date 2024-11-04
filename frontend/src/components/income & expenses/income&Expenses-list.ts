@@ -16,8 +16,8 @@ export class IncomeExpensesList {
         const weekButton: HTMLButtonElement  = document.querySelector<HTMLButtonElement>('button[data-period="week"]');
         const monthButton: HTMLButtonElement  = document.querySelector<HTMLButtonElement>('button[data-period="month"]');
         const yearButton: HTMLButtonElement  = document.querySelector<HTMLButtonElement>('button[data-period="year"]');
-        const fromDateInput: HTMLInputElement  = document.querySelector<HTMLInputElement>('input[name="dateFrom"]');
-        const toDateInput: HTMLInputElement  = document.querySelector<HTMLInputElement>('input[name="dateTo"]');
+        const fromDateInput: HTMLInputElement | null  = document.querySelector<HTMLInputElement>('input[name="dateFrom"]');
+        const toDateInput: HTMLInputElement | null  = document.querySelector<HTMLInputElement>('input[name="dateTo"]');
         const intervalButton: HTMLButtonElement  = document.querySelector<HTMLButtonElement>('button[data-period="interval"]');
 
         if (todayButton) {

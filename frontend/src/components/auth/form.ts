@@ -1,10 +1,17 @@
 import config from "../../config/config";
 import {Auth} from "../services/auth";
 import {CustomHttp} from "../services/custom-http";
+import {FormFieldType} from "../../types/form-field.type";
+import {LoginResponseType} from "../../types/login-response.type";
 
 export class Form {
+    readonly page: 'signup' | 'login';
+    private fields: FormFieldType[] = [];
+    readonly processElement: HTMLElement | null;
+
     constructor(page) {
         this.page = page;
+        this.processElement = null;
 
         //если пользователь уже зарегистрирован
         if (Auth.getAuthInfo(Auth.accessTokenKey)) {
@@ -53,22 +60,24 @@ export class Form {
             })
         }
 
-        const that = this;
+        const that: Form = this;
 
-        this.fields.forEach(item => {
-            item.element = document.getElementById(item.id);
+        this.fields.forEach((item: FormFieldType) => {
+            item.element = document.getElementById(item.id) as HTMLInputElement;
             item.element.onchange = function () {
-                that.validateField.call(that, item, this);
+                that.validateField.call(that, item, <HTMLInputElement>this);
             }
         });
 
         this.processElement = document.getElementById('process');
-        this.processElement.onclick = function () {
-            that.processForm();
+        if (this.processElement) {
+            this.processElement.onclick = function () {
+                that.processForm();
+            }
         }
     }
 
-    validateField(field, element) {
+    private validateField(field: FormFieldType, element: HTMLInputElement): void {
         if (!element.value || !element.value.match(field.regex)) {
             element.classList.add('is-invalid');
             field.valid = false;
@@ -78,49 +87,64 @@ export class Form {
         }
 
         if (field.name === 'passwordRepeat') {
-            const password = this.fields.find(item => item.name === 'password').element.value;
-            if (element.value !== password) {
+            const passwordField: FormFieldType | undefined = this.fields.find((item: FormFieldType): boolean => item.name === 'password');
+            if (passwordField && passwordField.element) {
+                const password: string = passwordField.element.value;
+                if (element.value !== password) {
+                    element.classList.add('is-invalid');
+                    field.valid = false;
+                } else {
+                    element.classList.remove('is-invalid');
+                    field.valid = true;
+                }
+            } else {
+                console.error('Password field not found.');
                 element.classList.add('is-invalid');
                 field.valid = false;
-            } else {
-                element.classList.remove('is-invalid');
-                field.valid = true;
             }
         }
 
         this.validateForm();
     }
 
-    validateForm() {
-        const validForm = this.fields.every(item => item.valid);
+    private validateForm(): boolean {
+        const validForm: boolean = this.fields.every((item: FormFieldType) => item.valid);
+        if (!this.processElement) {
+            console.log('Элемент не найден!');
+            return;
+        }
+
         if (validForm) {
             this.processElement.removeAttribute('disabled');
         } else {
             this.processElement.setAttribute('disabled', 'disabled');
         }
+
         return validForm;
     }
 
-    async processForm() {
+    private async processForm(): Promise<void> {
         if (this.validateForm()) {
-            const email = this.fields.find(item => item.name === 'email').element.value;
-            const password = this.fields.find(item => item.name === 'password').element.value;
+            const email: string | undefined  = this.fields.find((item: FormFieldType): boolean => item.name === 'email')?.element?.value;
+            const password: string | undefined  = this.fields.find((item: FormFieldType): boolean => item.name === 'password')?.element?.value;
 
             if (this.page === 'signup') {
                 try {
                     const result = await CustomHttp.request(config.api + '/signup', 'POST', {
-                        name: this.fields.find(item => item.name === 'name').element.value,
-                        lastName: this.fields.find(item => item.name === 'lastName').element.value,
+                        name: this.fields.find((item: FormFieldType): boolean => item.name === 'name')?.element?.value,
+                        lastName: this.fields.find((item: FormFieldType): boolean => item.name === 'lastName')?.element?.value,
                         email: email,
                         password: password,
-                        passwordRepeat: this.fields.find(item => item.name === 'passwordRepeat').element.value,
+                        passwordRepeat: this.fields.find((item: FormFieldType): boolean => item.name === 'passwordRepeat')?.element?.value,
                     });
 
                     if (result) {
                         if (result.error || !result.user) {
                             throw new Error(result.message);
                         }
-                        localStorage.setItem('userEmail', email);
+                        if (email) {
+                            localStorage.setItem('userEmail', email);
+                        }
                     }
                 } catch (error) {
                     return console.log(error);
@@ -128,21 +152,21 @@ export class Form {
             }
 
             try {
-                const result = await CustomHttp.request(config.api + '/login', 'POST', {
+                const result: LoginResponseType = await CustomHttp.request(config.api + '/login', 'POST', {
                     email: email,
                     password: password,
                 });
 
                 if (result) {
-                    if (result.error || !result.tokens.accessToken || !result.tokens.refreshToken || !result.user.name || !result.user.lastName || !result.user.id) {
+                    if (result.error || !result.tokens?.accessToken || !result.tokens?.refreshToken || !result.user?.name || !result.user?.lastName || !result.user?.id) {
                         throw new Error(result.message);
                     }
 
                     Auth.setTokens(result.tokens.accessToken, result.tokens.refreshToken);
                     Auth.setUserInfo({
-                        fullName: result.user.name + ' ' +  result.user.lastName,
+                        fullName: result.user.name + ' ' + result.user.lastName,
                         userId: result.user.id,
-                        email: result.email
+                        email: email
                     })
                     location.href = '#/';
                 }

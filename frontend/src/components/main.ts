@@ -1,7 +1,11 @@
 import { Chart, registerables } from 'chart.js';
 import {IncomeExpensesService} from "./services/income&expenses-service";
+import {IncomeExpenseChartType} from "../types/income-expense-chart.type";
 
 export class Main {
+    private incomeChart: Chart | null;
+    private expenseChart: Chart | null;
+
     constructor() {
         Chart.register(...registerables);
 
@@ -13,12 +17,12 @@ export class Main {
         this.initializeChart();
     }
 
-    async initializeChart() {
-        const result = await this.getIncomeExpenses('all');
+    private async initializeChart(): Promise<void> {
+        const result: IncomeExpenseChartType = await this.getIncomeExpenses('all');
         this.renderCharts(result);
     }
 
-    renderCharts(result) {
+    private renderCharts(result: IncomeExpenseChartType): void {
         const incomeData = result.filter(item => item.type === 'income');
         const expenseData = result.filter(item => item.type === 'expense');
 
