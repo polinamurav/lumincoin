@@ -2,7 +2,7 @@ export type RouteType = {
     route: string,
     title: string,
     filePathTemplate?: string,
-    useLayout?: string | boolean,
+    useLayout?: string,
     load?(): void,
     unload?(): void,
 }

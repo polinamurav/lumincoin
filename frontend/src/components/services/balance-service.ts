@@ -4,7 +4,7 @@ import {BalanceType} from "../../types/balance.type";
 
 //done
 export class BalanceService {
-    public static async getBalance(): Promise<BalanceType | void> {
+    public static async getBalance(): Promise<BalanceType | undefined> {
         try {
             const result: BalanceType = await HttpUtils.request(config.api + '/balance');
             console.log(result);
@@ -12,7 +12,6 @@ export class BalanceService {
             return result;
         } catch (error) {
             console.error('Ошибка при получении данных:', error);
-            return;
         }
     }
 }

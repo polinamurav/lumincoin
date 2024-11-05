@@ -29,6 +29,7 @@ export class Router {
     constructor() {
         this.titlePageElement = document.getElementById('title');
         this.contentPageElement = document.getElementById('content');
+        this.profileNameElement = null;
         this.userName = null;
 
         this.initEvents();
@@ -47,13 +48,11 @@ export class Router {
                 route: '#/404',
                 title: 'Страница не найдена',
                 filePathTemplate: '/templates/pages/404.html',
-                useLayout: false,
             },
             {
                 route: '#/login',
                 title: 'Авторизация',
                 filePathTemplate: '/templates/pages/auth/login.html',
-                useLayout: false,
                 load: () => {
                     new Form('login');
                 },
@@ -65,7 +64,6 @@ export class Router {
                 route: '#/sign-up',
                 title: 'Регистрация',
                 filePathTemplate: '/templates/pages/auth/sign-up.html',
-                useLayout: false,
                 load: () => {
                     new Form('signup');
                 },
@@ -258,7 +256,7 @@ export class Router {
     }
 
     private async getBalance(): Promise<void> {
-        const response: BalanceType = await BalanceService.getBalance();
+        const response: BalanceType | undefined = await BalanceService.getBalance();
 
         if (!response) {
             alert("Баланс не получен");
@@ -280,25 +278,31 @@ export class Router {
     private activateMenuItem(route: RouteType): void {
         let openedDropdown: HTMLElement | null = null;
 
-        document.querySelectorAll('.nav-link').forEach((item: HTMLElement) => {
-            const href: string | null = item.getAttribute('href');
-            if ((route.route.startsWith(href) && href !== '#/') || (route.route === '#/' && href === '#/')) {
+        document.querySelectorAll('.nav-link').forEach((item: Element) => {
+            const href: string | null = (item as HTMLElement).getAttribute('href');
+            if ((href && route.route.startsWith(href) && href !== '#/') || (href && route.route === '#/' && href === '#/')) {
                 item.classList.add('active');
                 item.classList.remove('link-dark');
                 if (href === '#/income' || href === '#/expense') {
-                    const dropdownMenu: HTMLElement | null = item.closest('.dropdown').querySelector('.dropdown-menu');
-                    if (dropdownMenu) {
-                        dropdownMenu.classList.add('show');
-                        openedDropdown = dropdownMenu;
+                    const dropdown: HTMLElement | null = item.closest('.dropdown');
+                    if (dropdown) {
+                        const dropdownMenu: HTMLElement | null = dropdown.querySelector('.dropdown-menu');
+                        if (dropdownMenu) {
+                            dropdownMenu.classList.add('show');
+                            openedDropdown = dropdownMenu;
+                        }
                     }
                 }
             } else {
                 item.classList.remove('active');
                 item.classList.add('link-dark');
                 if (href === '#/income' || href === '#/expense') {
-                    const dropdownMenu: HTMLElement | null = item.closest('.dropdown').querySelector('.dropdown-menu');
-                    if (dropdownMenu && openedDropdown !== dropdownMenu) {
-                        dropdownMenu.classList.remove('show');
+                    const dropdown: HTMLElement | null = item.closest('.dropdown');
+                    if (dropdown) {
+                        const dropdownMenu: HTMLElement | null = dropdown.querySelector('.dropdown-menu');
+                        if (dropdownMenu && openedDropdown !== dropdownMenu) {
+                            dropdownMenu.classList.remove('show');
+                        }
                     }
                 }
             }
