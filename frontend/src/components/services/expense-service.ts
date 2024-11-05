@@ -5,31 +5,28 @@ import {DefaultResponseType} from "../../types/default-response.type";
 
 //done
 export class ExpenseService {
-    public static async getExpenses(): Promise<CategoryExpenseType[] | void> {
+    public static async getExpenses(): Promise<CategoryExpenseType[] | undefined> {
         try {
             const result: CategoryExpenseType[] = await HttpUtils.request(config.api + '/categories/expense');
 
             if (!result) {
                 alert ('Данные операций отсутствуют или некорректны.');
                 window.location.href = '/#';
-                return;
             }
 
             return result;
         } catch (error) {
             console.error('Ошибка при получении данных:', error);
-            return;
         }
     }
 
-    public static async getExpense(id: number): Promise<CategoryExpenseType | void> {
+    public static async getExpense(id: number): Promise<CategoryExpenseType | undefined> {
         try {
             const result: CategoryExpenseType | DefaultResponseType = await HttpUtils.request(config.api + '/categories/expense/' + id);
 
             if (!result) {
                 alert('Данные операций отсутствуют или некорректны.');
                 window.location.href = '/#';
-                return;
             }
 
             if ((result as DefaultResponseType).error !== undefined) {
@@ -39,18 +36,16 @@ export class ExpenseService {
             return result as CategoryExpenseType;
         } catch (error) {
             console.error('Ошибка при получении данных:', error);
-            return;
         }
     }
 
-    public static async createExpense(data: CategoryExpenseType): Promise<CategoryExpenseType | void> {
+    public static async createExpense(data: CategoryExpenseType): Promise<CategoryExpenseType | undefined> {
         try {
             const result: CategoryExpenseType | DefaultResponseType = await HttpUtils.request(config.api + '/categories/expense', 'POST', data);
 
             if (!result) {
                 alert('Данные операций отсутствуют или некорректны.');
                 window.location.href = '/#';
-                return;
             }
 
             if ((result as DefaultResponseType).error !== undefined) {
@@ -60,18 +55,16 @@ export class ExpenseService {
             return result as CategoryExpenseType;
         } catch (error) {
             console.error('Ошибка при получении данных:', error);
-            return;
         }
     }
 
-    public static async updateExpense(id: number, data: CategoryExpenseType): Promise<CategoryExpenseType | void> {
+    public static async updateExpense(id: number, data: CategoryExpenseType): Promise<CategoryExpenseType | undefined> {
         try {
             const result: CategoryExpenseType | DefaultResponseType = await HttpUtils.request(config.api + '/categories/expense/' + id, 'PUT', data);
 
             if (!result) {
                 alert('Данные операций отсутствуют или некорректны.');
                 window.location.href = '/#';
-                return;
             }
 
             if ((result as DefaultResponseType).error !== undefined) {
@@ -81,7 +74,6 @@ export class ExpenseService {
             return result as CategoryExpenseType;
         } catch (error) {
             console.error('Ошибка при получении данных:', error);
-            return;
         }
     }
 

@@ -6,31 +6,28 @@ import {IncomeExpenseCreateType} from "../../types/income-expense-create.type";
 
 //done
 export class IncomeExpensesService {
-    public static async getIncomeExpenses(period: string = 'all'): Promise<IncomeExpenseType[] | void> {
+    public static async getIncomeExpenses(period: string = 'all'): Promise<IncomeExpenseType[] | undefined> {
         try {
             const result: IncomeExpenseType[] = await HttpUtils.request(config.api + '/operations?period=' + period);
 
             if (!result) {
                 alert ('Данные операций отсутствуют или некорректны.');
                 window.location.href = '/#';
-                return;
             }
 
             return result;
         } catch (error) {
             console.error('Ошибка при получении данных:', error);
-            return;
         }
     }
 
-    public static async getIncomeExpense(id: number): Promise<IncomeExpenseType | void> {
+    public static async getIncomeExpense(id: number): Promise<IncomeExpenseType | undefined> {
         try {
             const result: IncomeExpenseType | DefaultResponseType = await HttpUtils.request(config.api + '/operations/' + id);
 
             if (!result) {
                 alert ('Данные операций отсутствуют или некорректны.');
                 window.location.href = '/#';
-                return;
             }
 
             if ((result as DefaultResponseType).error !== undefined) {
@@ -40,18 +37,16 @@ export class IncomeExpensesService {
             return result as IncomeExpenseType;
         } catch (error) {
             console.error('Ошибка при получении данных:', error);
-            return;
         }
     }
 
-    public static async createIncomeExpenses(data: IncomeExpenseCreateType): Promise<IncomeExpenseCreateType | void> {
+    public static async createIncomeExpenses(data: IncomeExpenseCreateType): Promise<IncomeExpenseCreateType | undefined> {
         try {
             const result: IncomeExpenseCreateType | DefaultResponseType = await HttpUtils.request(config.api + '/operations', 'POST', data);
 
             if (!result) {
                 alert('Данные операций отсутствуют или некорректны.');
                 window.location.href = '/#';
-                return;
             }
 
             if ((result as DefaultResponseType).error !== undefined) {
@@ -61,18 +56,16 @@ export class IncomeExpensesService {
             return result as IncomeExpenseCreateType;
         } catch (error) {
             console.error('Ошибка при получении данных:', error);
-            return;
         }
     }
 
-    public static async updateIncomeExpense(id: number, data: IncomeExpenseCreateType): Promise<IncomeExpenseCreateType | void> {
+    public static async updateIncomeExpense(id: number, data: IncomeExpenseCreateType): Promise<IncomeExpenseCreateType | undefined> {
         try {
             const result: IncomeExpenseCreateType | DefaultResponseType = await HttpUtils.request(config.api + '/operations/' + id, 'PUT', data);
 
             if (!result) {
                 alert ('Данные операций отсутствуют или некорректны.');
                 window.location.href = '/#';
-                return;
             }
 
             if ((result as DefaultResponseType).error !== undefined) {
@@ -82,7 +75,6 @@ export class IncomeExpensesService {
             return result as IncomeExpenseCreateType;
         } catch (error) {
             console.error('Ошибка при получении данных:', error);
-            return;
         }
     }
 
