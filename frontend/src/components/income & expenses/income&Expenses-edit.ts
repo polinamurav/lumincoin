@@ -14,10 +14,13 @@ export class IncomeExpensesEdit {
     readonly amountInputElement: HTMLInputElement | null;
     readonly dateInputElement: HTMLInputElement | null;
     readonly commentInputElement: HTMLInputElement | null;
-    private incomeExpenseOriginalData: IncomeExpenseCreateType | null;
+    private incomeExpenseOriginalData!: IncomeExpenseCreateType;
 
     constructor() {
-        document.getElementById('updateButton').addEventListener('click', this.updateIncomeExpense.bind(this));
+        const updateButton: HTMLElement | null = document.getElementById('updateButton');
+        if (updateButton) {
+            updateButton.addEventListener('click', this.updateIncomeExpense.bind(this));
+        }
 
         this.typeInputElement = document.getElementById('typeInput') as HTMLInputElement;
         this.categoryInputElement = document.getElementById('categoryInput') as HTMLInputElement;
@@ -28,9 +31,10 @@ export class IncomeExpensesEdit {
         const id: string | null = UrlUtils.getUrlParam('id');
         if (!id) {
             window.location.href = '/#';
+            return;
         }
 
-        this.getIncomeExpense(id).then();
+            this.getIncomeExpense(id).then();
     }
 
     private validateForm(): boolean {
@@ -51,8 +55,8 @@ export class IncomeExpensesEdit {
         return isValid;
     }
 
-    private async getIncomeExpense(id): Promise<void> {
-        const response: IncomeExpenseType = await IncomeExpensesService.getIncomeExpense(id);
+    private async getIncomeExpense(id: string): Promise<void> {
+        const response: IncomeExpenseType | undefined = await IncomeExpensesService.getIncomeExpense(id);
 
         if (!response) {
             alert("Произошла ошибка");
@@ -65,10 +69,22 @@ export class IncomeExpensesEdit {
     }
 
     private showIncomeExpenses(incomeExpense: IncomeExpenseType): void {
-        this.typeInputElement.value = incomeExpense.type;
-        this.amountInputElement.value = incomeExpense.amount;
-        this.dateInputElement.value = incomeExpense.date;
-        this.commentInputElement.value = incomeExpense.comment;
+        if (this.typeInputElement) {
+            this.typeInputElement.value = incomeExpense.type;
+        }
+        
+        if (this.amountInputElement) {
+            this.amountInputElement.value = incomeExpense.amount.toString();
+        }
+        
+        if (this.dateInputElement) {
+            this.dateInputElement.value = incomeExpense.date;
+        }
+        
+        if (this.commentInputElement) {
+            this.commentInputElement.value = incomeExpense.comment;
+        }
+
         if (incomeExpense.type === 'income') {
             this.getIncomes().then();
         } else if (incomeExpense.type === 'expense') {
@@ -77,7 +93,7 @@ export class IncomeExpensesEdit {
     }
 
     private async getIncomes(): Promise<void> {
-        const response: CategoryIncomeType[] = await IncomeService.getIncomes();
+        const response: CategoryIncomeType[] | undefined = await IncomeService.getIncomes();
 
         if (!response) {
             alert(response);
@@ -89,7 +105,7 @@ export class IncomeExpensesEdit {
     }
 
     private async getExpenses(): Promise<void> {
-        const response: CategoryExpenseType[] = await ExpenseService.getExpenses();
+        const response: CategoryExpenseType[] | undefined = await ExpenseService.getExpenses();
 
         if (!response) {
             alert(response);
@@ -100,28 +116,38 @@ export class IncomeExpensesEdit {
         this.showOptions(response);
     }
 
-    private showOptions(result): void {
+    private showOptions(result: (CategoryExpenseType | CategoryIncomeType)[]): void {
         if (this.categoryInputElement) {
             this.categoryInputElement.innerHTML = '';
         }
 
-        const currentCategory: IncomeExpenseCreateType = result.find(cat => cat.title === this.incomeExpenseOriginalData.category);
+        const incomeExpenseOptions: IncomeExpenseCreateType[] = result.map(item => ({
+            type: this.incomeExpenseOriginalData.type,
+            amount: this.incomeExpenseOriginalData.amount,
+            date: this.incomeExpenseOriginalData.date,
+            comment: this.incomeExpenseOriginalData.comment,
+            category_id: item.id ?? 0,
+            category: item.title,
+        }));
+
+        const currentCategory = incomeExpenseOptions.find(cat => cat.category === this.incomeExpenseOriginalData.category);
         if (currentCategory) {
             const optionElement: HTMLOptionElement | null = document.createElement('option');
-            optionElement.value = currentCategory.id;
-            optionElement.textContent = currentCategory.title;
+                optionElement.value = currentCategory.category_id?.toString() ?? '';
+                optionElement.textContent = currentCategory.category ?? '';
+        
             if (this.categoryInputElement) {
                 this.categoryInputElement.appendChild(optionElement);
             }
-
-            //обновляем список с уже id
-            this.incomeExpenseOriginalData.category_id = currentCategory.id;
+    
+            // Обновляем категорию по id
+            this.incomeExpenseOriginalData.category_id = currentCategory.category_id;
         }
 
         for (let i: number = 0; i < result.length; i++) {
             if (result[i].id !== this.incomeExpenseOriginalData.category_id) {
                 const optionElement: HTMLOptionElement = document.createElement('option');
-                optionElement.value = result[i].id.toString();
+                optionElement.value = result[i].id?.toString() ?? '';
                 optionElement.textContent = result[i].title;
 
                 if (this.categoryInputElement) {
@@ -129,29 +155,28 @@ export class IncomeExpensesEdit {
                 }
             }
         }
-
     }
 
     private async updateIncomeExpense(e: MouseEvent): Promise<void> {
         e.preventDefault();
 
         if (this.validateForm()) {
-            if (this.typeInputElement.value !== this.incomeExpenseOriginalData.type) {
+            if (this.typeInputElement && this.typeInputElement.value !== this.incomeExpenseOriginalData.type) {
                 this.incomeExpenseOriginalData.type = this.typeInputElement.value;
             }
-            if (parseInt(this.categoryInputElement.value) !== parseInt(this.incomeExpenseOriginalData.category_id)) {
+            if (this.categoryInputElement && this.incomeExpenseOriginalData.category_id !== undefined && (parseInt(this.categoryInputElement.value) !== parseInt(this.incomeExpenseOriginalData.category_id.toString()))) {
                 this.incomeExpenseOriginalData.category_id = parseInt(this.categoryInputElement.value);
             }
-            if (parseFloat(this.amountInputElement.value) !== parseFloat(this.incomeExpenseOriginalData.amount)) {
+            if (this.amountInputElement && this.incomeExpenseOriginalData.category_id !== undefined && (parseFloat(this.amountInputElement.value) !== parseFloat(this.incomeExpenseOriginalData.amount.toString()))) {
                 this.incomeExpenseOriginalData.amount = parseFloat(this.amountInputElement.value);
             }
-            if (this.dateInputElement.value !== this.incomeExpenseOriginalData.date) {
+            if (this.dateInputElement && this.dateInputElement.value !== this.incomeExpenseOriginalData.date) {
                 this.incomeExpenseOriginalData.date = this.dateInputElement.value;
             }
-            if (this.commentInputElement.value !== this.incomeExpenseOriginalData.comment) {
+            if (this.commentInputElement && this.commentInputElement.value !== this.incomeExpenseOriginalData.comment) {
                 this.incomeExpenseOriginalData.comment = this.commentInputElement.value;
             }
-            const response: IncomeExpenseCreateType = await IncomeExpensesService.updateIncomeExpense(this.incomeExpenseOriginalData.id, this.incomeExpenseOriginalData);
+            const response: IncomeExpenseCreateType | undefined = await IncomeExpensesService.updateIncomeExpense(this.incomeExpenseOriginalData.id ?? 0, this.incomeExpenseOriginalData);
 
             if (!response) {
                 alert("Произошла ошибка");

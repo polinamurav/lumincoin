@@ -123,10 +123,12 @@ export class IncomeExpensesList {
                 typeCell.innerText = 'доход';
                 typeCell.className = 'text-success';
             }
-            trElement.insertCell().innerText = incomeExpenses[i].category;
-            trElement.insertCell().innerText = incomeExpenses[i].amount.toString();
-            trElement.insertCell().innerText = incomeExpenses[i].date;
-            trElement.insertCell().innerText = incomeExpenses[i].comment;
+                trElement.insertCell().innerText = incomeExpenses[i].category ?? '';
+                trElement.insertCell().innerText = incomeExpenses[i].amount?.toString() ?? '0';
+                trElement.insertCell().innerText = incomeExpenses[i].date ?? '';
+                trElement.insertCell().innerText = incomeExpenses[i].comment ?? '';            
+            
+            
 
             const actionCell: HTMLElement | null = trElement.insertCell();
             const deleteButton: HTMLButtonElement = document.createElement('button');

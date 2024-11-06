@@ -41,7 +41,7 @@ export class IncomeExpensesCreate {
     }
 
     private async getIncomes(): Promise<void> {
-        const response: CategoryIncomeType[] = await IncomeService.getIncomes();
+        const response: CategoryIncomeType[] | undefined = await IncomeService.getIncomes();
 
         if (!response) {
             alert(response);
@@ -53,7 +53,7 @@ export class IncomeExpensesCreate {
     }
 
     private async getExpenses(): Promise<void> {
-        const response: CategoryIncomeType[] = await ExpenseService.getExpenses();
+        const response: CategoryIncomeType[] | undefined = await ExpenseService.getExpenses();
 
         if (!response) {
             alert(response);
@@ -64,14 +64,14 @@ export class IncomeExpensesCreate {
         this.showOptions(response);
     }
 
-    private showOptions(result): void {
+    private showOptions(result: CategoryIncomeType[]): void {
         if (this.categoryInputElement) {
             this.categoryInputElement.innerHTML = '';
         }
 
         for (let i: number = 0; i < result.length; i++) {
             const optionElement: HTMLOptionElement | null = document.createElement('option');
-            optionElement.value = result[i].id;
+            optionElement.value = result[i].id?.toString() ?? '';
             optionElement.textContent = result[i].title;
 
             if (this.categoryInputElement) {
@@ -116,7 +116,7 @@ export class IncomeExpensesCreate {
                 comment,
             };
 
-            const response: IncomeExpenseCreateType = await IncomeExpensesService.createIncomeExpenses(createData);
+            const response: IncomeExpenseCreateType | undefined = await IncomeExpensesService.createIncomeExpenses(createData);
 
             if (!response) {
                 alert("Произошла ошибка");

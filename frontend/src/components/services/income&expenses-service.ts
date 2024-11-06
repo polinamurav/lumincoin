@@ -21,7 +21,7 @@ export class IncomeExpensesService {
         }
     }
 
-    public static async getIncomeExpense(id: number): Promise<IncomeExpenseType | undefined> {
+    public static async getIncomeExpense(id: string): Promise<IncomeExpenseType | undefined> {
         try {
             const result: IncomeExpenseType | DefaultResponseType = await HttpUtils.request(config.api + '/operations/' + id);
 
@@ -78,7 +78,7 @@ export class IncomeExpensesService {
         }
     }
 
-    public static async deleteIncomeExpense(id: number): Promise<boolean> {
+    public static async deleteIncomeExpense(id: string): Promise<boolean> {
         try {
             const result: DefaultResponseType = await HttpUtils.request(config.api + '/operations/' + id, 'DELETE');
 

@@ -9,10 +9,12 @@ export class IncomeExpenseDelete {
             window.location.href = '/#';
         }
 
-        this.deleteIncomeExpense(id).then();
+        if (id) {
+            this.deleteIncomeExpense(id).then();
+        }
     }
 
-    async deleteIncomeExpense(id): Promise<void>  {
+    async deleteIncomeExpense(id: string): Promise<void>  {
         const response: boolean = await IncomeExpensesService.deleteIncomeExpense(id);
 
         if (!response) {
