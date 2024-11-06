@@ -5,4 +5,4 @@ export type IncomeExpenseType = {
     date: string
     comment: string,
     category?: string
-};
+}; 
