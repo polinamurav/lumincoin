@@ -39,7 +39,7 @@ export class IncomeCreate {
                 title: this.titleInputElement.value,
             };
 
-            const response: CategoryIncomeType = await IncomeService.createIncome(createData);
+            const response: CategoryIncomeType | undefined = await IncomeService.createIncome(createData);
 
             if (!response) {
                 alert("Произошла ошибка");

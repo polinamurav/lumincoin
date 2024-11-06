@@ -20,7 +20,7 @@ export class IncomeService {
         }
     }
 
-    public static async getIncome(id: number): Promise<CategoryIncomeType | undefined> {
+    public static async getIncome(id: string): Promise<CategoryIncomeType | undefined> {
         try {
             const result: CategoryIncomeType | DefaultResponseType = await HttpUtils.request(config.api + '/categories/income/' + id);
 
@@ -58,7 +58,7 @@ export class IncomeService {
         }
     }
 
-    public static async deleteIncome(id: number): Promise<boolean> {
+    public static async deleteIncome(id: string): Promise<boolean> {
         try {
             const result: DefaultResponseType = await HttpUtils.request(config.api + '/categories/income/' + id, 'DELETE');
 

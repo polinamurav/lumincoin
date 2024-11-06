@@ -6,7 +6,7 @@ import {ExpenseService} from "../../services/expense-service";
 //done
 export class IncomeEdit {
     readonly titleInputElement: HTMLInputElement | null;
-    private incomeOriginalData: CategoryIncomeType | null;
+    private incomeOriginalData: CategoryIncomeType | null = null;
 
     constructor() {
         const updateButton: HTMLElement | null = document.getElementById('updateButton');
@@ -19,6 +19,7 @@ export class IncomeEdit {
         const id: string | null = UrlUtils.getUrlParam('id');
         if (!id) {
             window.location.href = '/#';
+            return;
         }
 
         this.getIncome(id).then();
@@ -37,8 +38,8 @@ export class IncomeEdit {
         return isValid;
     }
 
-    private async getIncome(id: number): Promise<void> {
-        const response: CategoryIncomeType = await IncomeService.getIncome(id);
+    private async getIncome(id: string): Promise<void> {
+        const response: CategoryIncomeType | undefined = await IncomeService.getIncome(id);
 
         if (!response) {
             alert("Произошла ошибка");
@@ -68,7 +69,7 @@ export class IncomeEdit {
             if (Object.keys(changedData).length > 0) {
                 const incomeId: number | undefined = this.incomeOriginalData.id;
                 if (incomeId !== undefined) {
-                    const response: CategoryIncomeType = await IncomeService.updateIncome(incomeId, changedData);
+                    const response: CategoryIncomeType | undefined = await IncomeService.updateIncome(incomeId, changedData);
 
                     if (!response) {
                         alert("Произошла ошибка");

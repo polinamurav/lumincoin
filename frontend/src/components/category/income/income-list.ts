@@ -8,7 +8,7 @@ export class IncomeList {
     }
 
     private async getIncomes(): Promise<void> {
-        const response: CategoryIncomeType[] = await IncomeService.getIncomes();
+        const response: CategoryIncomeType[] | undefined = await IncomeService.getIncomes();
 
         if (!response) {
             alert(response);
@@ -19,7 +19,7 @@ export class IncomeList {
         this.showRecords(response);
     }
 
-    private showRecords(income): void {
+    private showRecords(income: CategoryIncomeType[]): void {
         const recordsElement: HTMLElement | null = document.getElementById('records');
         if (recordsElement) {
             recordsElement.innerHTML = ''; // Очистка существующих записей
@@ -41,7 +41,7 @@ export class IncomeList {
 
             const deleteButton: HTMLElement | null = document.createElement('button');
             deleteButton.setAttribute('type', 'button');
-            deleteButton.setAttribute('data-id', income[i].id); // Задание data-id с id записи
+            deleteButton.setAttribute('data-id', income[i].id?.toString() ?? ''); // Задание data-id с id записи
             deleteButton.setAttribute('data-bs-toggle', 'modal');
             deleteButton.setAttribute('data-bs-target', '#deleteModal');
             deleteButton.className = 'btn btn-danger';
@@ -85,7 +85,7 @@ export class IncomeList {
         if (deleteModal) {
             deleteModal.addEventListener('hidden.bs.modal', () => {
                 const deleteLink = document.querySelector('#deleteModal a[href^="#/income/delete"]');
-                deleteLink.setAttribute('href', '#/income/delete');
+                if (deleteLink) deleteLink.setAttribute('href', '#/income/delete');
             });
         }
     }

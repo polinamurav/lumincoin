@@ -7,12 +7,13 @@ export class IncomeDelete {
         const id: string | null = UrlUtils.getUrlParam('id');
         if (!id) {
             window.location.href = '/#';
+            return;
         }
 
         this.deleteIncome(id).then();
     }
 
-    private async deleteIncome(id): Promise<void> {
+    private async deleteIncome(id: string): Promise<void> {
         const response: boolean = await IncomeService.deleteIncome(id);
 
         if (!response) {
