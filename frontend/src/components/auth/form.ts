@@ -3,19 +3,21 @@ import {Auth} from "../services/auth";
 import {CustomHttp} from "../services/custom-http";
 import {FormFieldType} from "../../types/form-field.type";
 import {LoginResponseType} from "../../types/login-response.type";
+import { ActionPageType } from "../../types/action-page.type";
 
 export class Form {
-    readonly page: 'signup' | 'login';
+    readonly page: ActionPageType.signup | ActionPageType.login;
     private fields: FormFieldType[] = [];
     readonly processElement: HTMLElement | null;
 
-    constructor(page) {
+    constructor(page: ActionPageType.signup | ActionPageType.login) {
         this.page = page;
         this.processElement = null;
 
         //если пользователь уже зарегистрирован
         if (Auth.getAuthInfo(Auth.accessTokenKey)) {
-            return location.href = '#/';
+            location.href = '#/';
+            return;
         }
 
         this.fields = [
@@ -111,7 +113,7 @@ export class Form {
         const validForm: boolean = this.fields.every((item: FormFieldType) => item.valid);
         if (!this.processElement) {
             console.log('Элемент не найден!');
-            return;
+            return false;
         }
 
         if (validForm) {

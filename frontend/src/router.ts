@@ -17,6 +17,7 @@ import {BalanceService} from "./components/services/balance-service";
 import {RouteType} from "./types/route.type";
 import {BalanceType} from "./types/balance.type";
 import {UserInfoType} from "./types/user-info.type";
+import { ActionPageType } from "./types/action-page.type";
 
 //done
 export class Router {
@@ -54,7 +55,7 @@ export class Router {
                 title: 'Авторизация',
                 filePathTemplate: '/templates/pages/auth/login.html',
                 load: () => {
-                    new Form('login');
+                    new Form(ActionPageType.login);
                 },
                 unload: () => {
                     document.body.classList.remove('d-flex', 'vh-100');
@@ -65,7 +66,7 @@ export class Router {
                 title: 'Регистрация',
                 filePathTemplate: '/templates/pages/auth/sign-up.html',
                 load: () => {
-                    new Form('signup');
+                    new Form(ActionPageType.signup);
                 },
                 unload: () => {
                     document.body.classList.remove('d-flex', 'vh-100');
