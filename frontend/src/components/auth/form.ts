@@ -3,7 +3,7 @@ import {Auth} from "../services/auth";
 import {CustomHttp} from "../services/custom-http";
 import {FormFieldType} from "../../types/form-field.type";
 import {LoginResponseType} from "../../types/login-response.type";
-import { ActionPageType } from "../../types/action-page.type";
+import {ActionPageType} from "../../types/action-page.type";
 
 export class Form {
     readonly page: ActionPageType.signup | ActionPageType.login;
@@ -37,7 +37,7 @@ export class Form {
             },
         ];
 
-        if (this.page === 'signup') {
+        if (this.page === ActionPageType.signup) {
             this.fields.unshift({
                     name: 'name',
                     id: 'name',
@@ -130,7 +130,7 @@ export class Form {
             const email: string | undefined  = this.fields.find((item: FormFieldType): boolean => item.name === 'email')?.element?.value;
             const password: string | undefined  = this.fields.find((item: FormFieldType): boolean => item.name === 'password')?.element?.value;
 
-            if (this.page === 'signup') {
+            if (this.page === ActionPageType.signup) {
                 try {
                     const result = await CustomHttp.request(config.api + '/signup', 'POST', {
                         name: this.fields.find((item: FormFieldType): boolean => item.name === 'name')?.element?.value,
@@ -139,6 +139,7 @@ export class Form {
                         password: password,
                         passwordRepeat: this.fields.find((item: FormFieldType): boolean => item.name === 'passwordRepeat')?.element?.value,
                     });
+                    console.log('Signup result:', result);
 
                     if (result) {
                         if (result.error || !result.user) {
