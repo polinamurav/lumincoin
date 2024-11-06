@@ -13,7 +13,7 @@ export class ExpenseDelete {
         this.deleteExpense(id).then();
     }
 
-    private async deleteExpense(id): Promise<void> {
+    private async deleteExpense(id: string): Promise<void> {
         const response: boolean = await ExpenseService.deleteExpense(id);
 
         if (!response) {

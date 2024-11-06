@@ -38,7 +38,7 @@ export class ExpenseCreate {
                 title: this.titleInputElement.value,
             };
 
-            const response: CategoryExpenseType = await ExpenseService.createExpense(createData);
+            const response: CategoryExpenseType | undefined = await ExpenseService.createExpense(createData);
 
             if (!response) {
                 alert("Произошла ошибка");

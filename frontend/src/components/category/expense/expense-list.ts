@@ -8,7 +8,7 @@ export class ExpenseList {
     }
 
     private async getExpenses(): Promise<void> {
-        const response: CategoryExpenseType[] = await ExpenseService.getExpenses();
+        const response: CategoryExpenseType[] | undefined = await ExpenseService.getExpenses();
 
         if (!response) {
             alert(response);
@@ -19,7 +19,7 @@ export class ExpenseList {
         this.showRecords(response);
     }
 
-    private showRecords(expense): void {
+    private showRecords(expense: CategoryExpenseType[]): void {
         const recordsElement: HTMLElement | null = document.getElementById('records');
         if (recordsElement) {
             recordsElement.innerHTML = '';
@@ -41,7 +41,7 @@ export class ExpenseList {
 
             const deleteButton: HTMLElement | null = document.createElement('button');
             deleteButton.setAttribute('type', 'button');
-            deleteButton.setAttribute('data-id', expense[i].id);
+            deleteButton.setAttribute('data-id', expense[i].id?.toString() ?? '');    
             deleteButton.setAttribute('data-bs-toggle', 'modal');
             deleteButton.setAttribute('data-bs-target', '#deleteModal');
             deleteButton.className = 'btn btn-danger';
@@ -85,7 +85,9 @@ export class ExpenseList {
         if (deleteModal) {
             deleteModal.addEventListener('hidden.bs.modal', () => {
                 const deleteLink = document.querySelector('#deleteModal a[href^="#/expense/delete"]');
-                deleteLink.setAttribute('href', '#/expense/delete');
+                if (deleteLink) {
+                    deleteLink.setAttribute('href', '#/expense/delete');
+                }
             });
         }
     }

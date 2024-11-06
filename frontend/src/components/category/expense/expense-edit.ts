@@ -5,7 +5,7 @@ import {CategoryExpenseType} from "../../../types/category-expense.type";
 //done
 export class ExpenseEdit {
     readonly titleInputElement: HTMLInputElement | null;
-    private expenseOriginalData: CategoryExpenseType | null;
+    private expenseOriginalData: CategoryExpenseType | null = null;
 
     constructor() {
         const updateButton: HTMLElement | null = document.getElementById('updateButton');
@@ -37,8 +37,8 @@ export class ExpenseEdit {
         return isValid;
     }
 
-    private async getExpense(id): Promise<void> {
-        const response: CategoryExpenseType = await ExpenseService.getExpense(id);
+    private async getExpense(id: string): Promise<void> {
+        const response: CategoryExpenseType | undefined = await ExpenseService.getExpense(id);
 
         if (!response) {
             alert("Произошла ошибка");
@@ -52,7 +52,7 @@ export class ExpenseEdit {
         }
     }
 
-    private async updateExpense(e): Promise<void> {
+    private async updateExpense(e: MouseEvent): Promise<void> {
         e.preventDefault();
 
         if (this.validateForm()) {
@@ -68,7 +68,7 @@ export class ExpenseEdit {
             if (Object.keys(changedData).length > 0) {
                 const expenseId: number | undefined = this.expenseOriginalData.id;
                 if (expenseId !== undefined) {
-                    const response: CategoryExpenseType = await ExpenseService.updateExpense(expenseId, changedData);
+                    const response: CategoryExpenseType | undefined = await ExpenseService.updateExpense(expenseId, changedData);
 
                     if (!response) {
                         alert("Произошла ошибка");

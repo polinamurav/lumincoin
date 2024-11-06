@@ -20,7 +20,7 @@ export class ExpenseService {
         }
     }
 
-    public static async getExpense(id: number): Promise<CategoryExpenseType | undefined> {
+    public static async getExpense(id: string): Promise<CategoryExpenseType | undefined> {
         try {
             const result: CategoryExpenseType | DefaultResponseType = await HttpUtils.request(config.api + '/categories/expense/' + id);
 
@@ -77,7 +77,7 @@ export class ExpenseService {
         }
     }
 
-    public static async deleteExpense(id: number): Promise<boolean> {
+    public static async deleteExpense(id: string): Promise<boolean> {
         try {
             const result: DefaultResponseType = await HttpUtils.request(config.api + '/categories/expense/' + id, 'DELETE');
 
