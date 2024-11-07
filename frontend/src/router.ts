@@ -229,25 +229,28 @@ export class Router {
                     contentBlock.innerHTML = await fetch(newRoute.filePathTemplate).then((response: Response) => response.text());
                 }
             }
-            await this.getBalance();
+            if (urlRoute !== '#/login' && urlRoute !== '#/sign-up') {
+                await this.getBalance();
 
-            this.profileNameElement = document.getElementById('user-name');
-            if (!this.userName) {
-                let userInfoStr: string | null = Auth.getAuthInfo(Auth.userInfoKey) as string | null;
-                if (userInfoStr) {
-                    const userInfo: UserInfoType = JSON.parse(userInfoStr);
-                    if (userInfo.fullName) {
-                        this.userName = userInfo.fullName;
+                this.profileNameElement = document.getElementById('user-name');
+                if (!this.userName) {
+                    let userInfoStr: string | null = Auth.getAuthInfo(Auth.userInfoKey) as string | null;
+                    if (userInfoStr) {
+                        const userInfo: UserInfoType = JSON.parse(userInfoStr);
+                        if (userInfo.fullName) {
+                            this.userName = userInfo.fullName;
+                        }
                     }
                 }
-            }
 
-            if (this.profileNameElement) {
-                if (typeof this.userName === "string") {
-                    this.profileNameElement.innerText = this.userName;
+                if (this.profileNameElement) {
+                    if (typeof this.userName === "string") {
+                        this.profileNameElement.innerText = this.userName;
+                    }
                 }
+
+                this.activateMenuItem(newRoute);
             }
-            this.activateMenuItem(newRoute);
         }
 
         if (newRoute.load && typeof newRoute.load === 'function') {

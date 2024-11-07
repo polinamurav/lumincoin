@@ -12,13 +12,13 @@ export class IncomeExpensesList {
 
     private buttonFilters(): void {
         const todayButton: HTMLButtonElement | null = document.querySelector<HTMLButtonElement>('button[data-period="today"]');
-        const allButton: HTMLButtonElement | null  = document.querySelector<HTMLButtonElement>('button[data-period="all"]');
-        const weekButton: HTMLButtonElement | null  = document.querySelector<HTMLButtonElement>('button[data-period="week"]');
-        const monthButton: HTMLButtonElement | null  = document.querySelector<HTMLButtonElement>('button[data-period="month"]');
-        const yearButton: HTMLButtonElement | null  = document.querySelector<HTMLButtonElement>('button[data-period="year"]');
-        const fromDateInput: HTMLInputElement | null  = document.querySelector<HTMLInputElement>('input[name="dateFrom"]');
-        const toDateInput: HTMLInputElement | null  = document.querySelector<HTMLInputElement>('input[name="dateTo"]');
-        const intervalButton: HTMLButtonElement | null  = document.querySelector<HTMLButtonElement>('button[data-period="interval"]');
+        const allButton: HTMLButtonElement | null = document.querySelector<HTMLButtonElement>('button[data-period="all"]');
+        const weekButton: HTMLButtonElement | null = document.querySelector<HTMLButtonElement>('button[data-period="week"]');
+        const monthButton: HTMLButtonElement | null = document.querySelector<HTMLButtonElement>('button[data-period="month"]');
+        const yearButton: HTMLButtonElement | null = document.querySelector<HTMLButtonElement>('button[data-period="year"]');
+        const fromDateInput: HTMLInputElement | null = document.querySelector<HTMLInputElement>('input[name="dateFrom"]');
+        const toDateInput: HTMLInputElement | null = document.querySelector<HTMLInputElement>('input[name="dateTo"]');
+        const intervalButton: HTMLButtonElement | null = document.querySelector<HTMLButtonElement>('button[data-period="interval"]');
 
         if (todayButton) {
             todayButton.addEventListener('click', () => {
@@ -123,12 +123,11 @@ export class IncomeExpensesList {
                 typeCell.innerText = 'доход';
                 typeCell.className = 'text-success';
             }
-                trElement.insertCell().innerText = incomeExpenses[i].category ?? '';
-                trElement.insertCell().innerText = incomeExpenses[i].amount?.toString() ?? '0';
-                trElement.insertCell().innerText = incomeExpenses[i].date ?? '';
-                trElement.insertCell().innerText = incomeExpenses[i].comment ?? '';            
-            
-            
+            trElement.insertCell().innerText = incomeExpenses[i].category ?? '';
+            trElement.insertCell().innerText = incomeExpenses[i].amount?.toString() ?? '0';
+            trElement.insertCell().innerText = incomeExpenses[i].date ?? '';
+            trElement.insertCell().innerText = incomeExpenses[i].comment ?? '';
+
 
             const actionCell: HTMLElement | null = trElement.insertCell();
             const deleteButton: HTMLButtonElement = document.createElement('button');
@@ -140,7 +139,7 @@ export class IncomeExpensesList {
 
             deleteButton.addEventListener('click', () => {
                 const deleteLink: HTMLElement | null = document.querySelector('#dateRangeModal a[href="#/income&expenses/delete"]');
-                if (deleteLink){
+                if (deleteLink) {
                     deleteLink.setAttribute('href', `#/income&expenses/delete?id=${incomeExpenses[i].id}`);
                 }
             });
@@ -159,6 +158,11 @@ export class IncomeExpensesList {
 
         const deleteModal: HTMLElement | null = document.getElementById('dateRangeModal');
         if (deleteModal) {
+            const backdrop: HTMLElement | null = document.querySelector('.modal-backdrop.fade.show');
+            if (backdrop) {
+                backdrop.classList.remove('show');
+                document.body.removeChild(backdrop);
+            }
             deleteModal.addEventListener('hidden.bs.modal', () => {
                 const deleteLink: HTMLElement | null = document.querySelector('#dateRangeModal a[href^="#/income&expenses/delete"]');
                 if (deleteLink) {

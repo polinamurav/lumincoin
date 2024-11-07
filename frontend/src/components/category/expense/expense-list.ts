@@ -83,6 +83,11 @@ export class ExpenseList {
         //очистка при закрытии модального окна
         const deleteModal: HTMLElement | null = document.getElementById('deleteModal');
         if (deleteModal) {
+            const backdrop: HTMLElement | null = document.querySelector('.modal-backdrop.fade.show');
+            if (backdrop) {
+                backdrop.classList.remove('show');
+                document.body.removeChild(backdrop);
+            }
             deleteModal.addEventListener('hidden.bs.modal', () => {
                 const deleteLink = document.querySelector('#deleteModal a[href^="#/expense/delete"]');
                 if (deleteLink) {
